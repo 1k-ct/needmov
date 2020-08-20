@@ -55,7 +55,10 @@ func startCruise(url string) func() (string, bool) {
 // GetLivingVideo 指定されたLIVE配信中の動画のURLを取得する -> return slice
 func GetLivingVideo(url string) []string {
 	var dataLink []string
-	doc, _ := goquery.NewDocument(url)
+	doc, err := goquery.NewDocument(url)
+	if err != nil {
+		log.Fatal(err)
+	}
 	doc.Find("div").Each(func(_ int, s *goquery.Selection) {
 		url, _ := s.Attr("data-link")
 		if len(url) > 10 {
