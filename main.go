@@ -12,10 +12,10 @@ var url string = "https://virtual-youtuber.userlocal.jp/lives"
 
 /*
 func main() {
-	//connection := "host=db port=5432 user=gyvpwvqatrpiye password=8c3a57c1b9b406243904e6ac8ebf6896103ac48f3c5085a48a790d21ee238386 dbname=d4pq7kp072eol5 sslmode=disable"
+	//connection := "host=db port=5432 user=gyvpwvqatrpiye password=aaaaaaaa dbname=aaaaaaa sslmode=disable"
 	//db, err := gorm.Open("postgres", connection)
 
-	//url := os.Getenv("postgres://gyvpwvqatrpiye:8c3a57c1b9b406243904e6ac8ebf6896103ac48f3c5085a48a790d21ee238386@ec2-52-204-20-42.compute-1.amazonaws.com:5432/d4pq7kp072eol5")
+	//url := os.Getenv("postgres://gyvpwvqatrpiye:aaaaaa@a.a.amazonaws.com:5432/aaa")
 	//connection, err := pq.ParseURL(url)
 	//if err != nil {
 	//	panic(err.Error())
