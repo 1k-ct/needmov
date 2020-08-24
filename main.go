@@ -1,30 +1,48 @@
 package main
 
 import (
+	"fmt"
 	"log"
-	"net/http"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/gin-gonic/gin"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 var url string = "https://virtual-youtuber.userlocal.jp/lives"
 
+/*
 func main() {
-	r := gin.Default()
-	r.LoadHTMLGlob("templates/*.html")
+	//connection := "host=db port=5432 user=gyvpwvqatrpiye password=8c3a57c1b9b406243904e6ac8ebf6896103ac48f3c5085a48a790d21ee238386 dbname=d4pq7kp072eol5 sslmode=disable"
+	//db, err := gorm.Open("postgres", connection)
 
-	r.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "start.html", gin.H{})
-	})
+	//url := os.Getenv("postgres://gyvpwvqatrpiye:8c3a57c1b9b406243904e6ac8ebf6896103ac48f3c5085a48a790d21ee238386@ec2-52-204-20-42.compute-1.amazonaws.com:5432/d4pq7kp072eol5")
+	//connection, err := pq.ParseURL(url)
+	//if err != nil {
+	//	panic(err.Error())
+	//}
+	//connection += " sslmode=require"
+
+	//db, err := gorm.Open("postgres", connection)
+	//if err != nil {
+	//	panic(err.Error())
+	//}
+	//defer db.Close()
+
+	r := gin.Default()*/
+//r.LoadHTMLGlob("templates/*/**")
+/*
+	r.GET("/", func(c *gin.Context) { c.HTML(http.StatusOK, "start.html", gin.H{}) })
 	//r.GET("/new", ctrl.VideoStart)
-	r.GET("/ggnew", func(c *gin.Context) {
-		c.Redirect(302, "/new")
-	})
-	r.GET("/stoppoint", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "stoppoint.html", gin.H{})
-	})
+	r.GET("/ggnew", func(c *gin.Context) { c.Redirect(302, "/new") })
+	r.GET("/stoppoint", func(c *gin.Context) { c.HTML(http.StatusOK, "stoppoint.html", gin.H{}) })
+	hashiba := r.Group("/hashiba")
+	views := GetChannelName()
+	{
+		hashiba.GET("/", func(c *gin.Context) { c.HTML(http.StatusOK, "hashibadeteil.html", gin.H{}) })
 
+		hashiba.GET("/home", func(c *gin.Context) { c.HTML(http.StatusOK, "hashibahome.html", gin.H{"views": views}) })
+	}
+	r.GET("/shiromiya", func(c *gin.Context) { c.HTML(http.StatusOK, "shiromiyahome.html", gin.H{}) })
 	sc := startCruise(url)
 	r.GET("/new", func(c *gin.Context) {
 		dataLink, ok := sc()
@@ -37,6 +55,7 @@ func main() {
 	})
 	r.Run()
 }
+*/
 func startCruise(url string) func() (string, bool) {
 	dataLink := GetLivingVideo(url) //動画をスクレイピングしてくる
 	log.Println("スクレイピング出来たよ！")
@@ -55,10 +74,7 @@ func startCruise(url string) func() (string, bool) {
 // GetLivingVideo 指定されたLIVE配信中の動画のURLを取得する -> return slice
 func GetLivingVideo(url string) []string {
 	var dataLink []string
-	doc, err := goquery.NewDocument(url)
-	if err != nil {
-		log.Fatal(err)
-	}
+	doc, _ := goquery.NewDocument(url)
 	doc.Find("div").Each(func(_ int, s *goquery.Selection) {
 		url, _ := s.Attr("data-link")
 		if len(url) > 10 {
@@ -66,4 +82,25 @@ func GetLivingVideo(url string) []string {
 		}
 	})
 	return dataLink
+}
+
+// GetChannelName 羽柴チャンネルの視聴回数をスクレイピングする
+func GetChannelName() string {
+	doc, err := goquery.NewDocument("https://www.youtube.com/channel/UC_BlXOQe5OcRC7o0GX8kp8A/about")
+	if err != nil {
+		panic(err)
+	}
+	selection := doc.Find("#right-column > yt-formatted-string:nth-child(3)")
+	innerSelection := selection.Text()
+
+	return innerSelection
+}
+func main() {
+	doc, err := goquery.NewDocument("https://www.youtube.com/channel/UC_BlXOQe5OcRC7o0GX8kp8A/about")
+	if err != nil {
+		panic(err)
+	}
+	doc.Find("#right-column").Each(func(i int, s *goquery.Selection) {
+		fmt.Println(s.Text())
+	})
 }
