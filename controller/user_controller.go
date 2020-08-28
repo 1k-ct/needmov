@@ -1,6 +1,7 @@
 package user
 
 import (
+	"needmov/db"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -11,7 +12,7 @@ type Controller struct{}
 
 // Index is start page "/"
 func (pc Controller) Index(c *gin.Context) {
-	c.HTML(http.StatusOK, "start.html", gin.H{})
+	c.HTML(http.StatusOK, "start.html", gin.H{"users": db.GetDBContents()})
 }
 
 // HashibaDeteil hashibadeteil page "/hashiba/"

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"log"
+	"needmov/server"
 
 	"github.com/PuerkitoBio/goquery"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
@@ -96,11 +96,5 @@ func GetChannelName() string {
 	return innerSelection
 }
 func main() {
-	doc, err := goquery.NewDocument("https://www.youtube.com/channel/UC_BlXOQe5OcRC7o0GX8kp8A/about")
-	if err != nil {
-		panic(err)
-	}
-	doc.Find("#right-column").Each(func(i int, s *goquery.Selection) {
-		fmt.Println(s.Text())
-	})
+	server.Init()
 }
