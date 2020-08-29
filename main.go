@@ -98,3 +98,6 @@ func GetChannelName() string {
 func main() {
 	server.Init()
 }
+
+// golang gin 認証  　->  検索
+// golang gin login  ->  検索

@@ -32,7 +32,14 @@ func OpenDB() *gorm.DB {
 
 //ConnectGorm connect db
 func ConnectGorm() *gorm.DB { // 下のところは自分のものに変更してください
-	db, err := gorm.Open("mysql", "user1:Password_01@/go_sample")
+	DBMS := "mysql"
+	USER := "user1"
+	PASS := "Password_01"
+	PROTOCOL := "tcp(localhost:3306)"
+	DBNAME := "go_sample"
+	CONNECT := USER + ":" + PASS + "@" + PROTOCOL + "/" + DBNAME
+	db, err := gorm.Open(DBMS, CONNECT)
+
 	if err != nil {
 		panic(err)
 	}
