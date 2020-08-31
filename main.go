@@ -2,9 +2,11 @@ package main
 
 import (
 	"log"
+	"needmov/db"
 	"needmov/server"
 
 	"github.com/PuerkitoBio/goquery"
+	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
@@ -95,7 +97,9 @@ func GetChannelName() string {
 
 	return innerSelection
 }
+
 func main() {
+	db.NewMakeDB()
 	server.Init()
 }
 

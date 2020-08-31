@@ -1,36 +1,35 @@
 package db
 
 import (
-	"fmt"
-
+	"needmov/crypto"
 	"needmov/entity"
 
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/go-sql-driver/mysql" // gorm mysql import
 	"github.com/jinzhu/gorm"
 )
 
-// OpenDB is
-func OpenDB() *gorm.DB {
-	DBMS := "mysql"
-	USER := "user1"
-	PASS := "Password_01"
-	PROTOCOL := "tcp(localhost:3306)"
-	DBNAME := "users"
-	CONNECT := USER + ":" + PASS + "@" + PROTOCOL + "/" + DBNAME
-	db, err := gorm.Open(DBMS, CONNECT)
+// NewMakeDB dbの初期化　AutoMigrate dbの作成
+func NewMakeDB() {
+	db := ConnectGorm()
+	defer db.Close()
 
-	if err != nil {
-		panic(err.Error())
-	}
-
-	// DBエンジンを「InnoDB」に設定
-	db.Set("gorm:table_options", "ENGINE=InnoDB")
-
-	fmt.Println("db connected: ", &db)
-	return db
+	db.AutoMigrate(&entity.UsersMig{})
 }
 
-//ConnectGorm connect db
+// CreateUser ユーザー登録
+func CreateUser(username string, password string) []error {
+	passwordEncrypt, _ := crypto.PasswordEncrypt(password)
+	// Encrypt 暗号化
+	db := ConnectGorm()
+	defer db.Close()
+	// Insert処理
+	if err := db.Create(&entity.UsersMig{Username: username, Password: passwordEncrypt}).GetErrors(); err != nil {
+		return err
+	}
+	return nil
+}
+
+//ConnectGorm connect dbの接続
 func ConnectGorm() *gorm.DB { // 下のところは自分のものに変更してください
 	DBMS := "mysql"
 	USER := "user1"
@@ -54,9 +53,9 @@ func AddNewInDB(id int, name string, password string, email string) { //, create
 }
 
 // GetDBContents DBの全ての投稿を取得する
-func GetDBContents() []entity.Users {
+func GetDBContents() []entity.UsersMig {
 	db := ConnectGorm()
-	var users []entity.Users
+	var users []entity.UsersMig
 	db.Find(&users)
 	db.Close()
 	return users
@@ -65,8 +64,17 @@ func GetDBContents() []entity.Users {
 // DeleteDB 選択したidをDBから削除
 func DeleteDB(id int) {
 	db := ConnectGorm()
-	var user entity.Users
+	var user entity.UsersMig
 	db.First(&user, id)
 	db.Delete(&user)
 	db.Close()
+}
+
+// GetUser ユーザーを一件取得
+func GetUser(username string) entity.UsersMig {
+	db := ConnectGorm()
+	var user entity.UsersMig
+	db.First(&user, "username = ?", username)
+	db.Close()
+	return user
 }

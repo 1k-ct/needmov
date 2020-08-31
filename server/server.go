@@ -20,6 +20,11 @@ func router() *gin.Engine {
 	r.GET("/", ctrl.Index)
 	r.GET("/admin", ctrl.Adimn)
 
+	r.GET("/signup", ctrl.SignUpGet)
+	r.POST("/signup", ctrl.SignUpPost)
+	r.GET("/login", ctrl.LoginGet)
+	r.POST("/login", ctrl.LoginPost)
+
 	hashiba := r.Group("/hashiba")
 	{
 		hashiba.GET("/", ctrl.HashibaDeteil)

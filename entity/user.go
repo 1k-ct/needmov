@@ -10,3 +10,10 @@ type Users struct {
 	PassWord  string
 	Email     string
 }
+
+// UsersMig -> gorm.Model UserName Password
+type UsersMig struct {
+	ID       uint   `form:"id" gorm:"primaryKey"`
+	Username string `form:"username" binding:"required" gorm:"unique;not null"`
+	Password string `form:"password" binding:"required"`
+}
