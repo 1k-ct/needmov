@@ -17,3 +17,8 @@ type UsersMig struct {
 	Username string `form:"username" binding:"required" gorm:"unique;not null"`
 	Password string `form:"password" binding:"required"`
 }
+
+// SessionInfo UserID type is interface{}
+type SessionInfo struct {
+	ID interface{}
+}

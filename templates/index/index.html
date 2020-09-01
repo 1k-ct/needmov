@@ -23,7 +23,10 @@
     {{ .dataLink }}
 
     <meta http-equiv="refresh" content="10;URL=/new">
-
+    <form action="/logout" method="post">
+        <p>ユーザーID: {{.Username}}</p>
+        <p><input type="submit" value="ログアウト"></p>
+    </form>
 
 </body>
 

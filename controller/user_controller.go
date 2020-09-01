@@ -7,6 +7,7 @@ import (
 	"needmov/entity"
 	"net/http"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
@@ -35,7 +36,15 @@ func (pc Controller) Adimn(c *gin.Context) {
 
 // SignUpGet "/signup" "signup.html"　ユーザー登録画面
 func (pc Controller) SignUpGet(c *gin.Context) {
-	c.HTML(http.StatusOK, "signup.html", gin.H{})
+	ID := c.PostForm("ID")
+	//セッションにデータを格納する
+	session := sessions.Default(c)
+	session.Set("ID", ID)
+	session.Save()
+	//Login(c, ID) // // 同じパッケージ内のログイン処理
+
+	c.Redirect(http.StatusMovedPermanently, "/hashiba/")
+	//c.HTML(http.StatusOK, "signup.html", gin.H{})
 }
 
 // SignUpPost "/signup" "signup.html" ユーザー登録
@@ -47,11 +56,19 @@ func (pc Controller) SignUpPost(c *gin.Context) {
 	} else {
 		username := c.PostForm("username")
 		password := c.PostForm("password")
+		ID := c.PostForm("ID")
+
 		// 登録ユーザーが重複していた場合にはじく処理
 		if err := db.CreateUser(username, password); err != nil {
 			c.HTML(http.StatusBadRequest, "signup.html", gin.H{"err": err})
 		}
-		c.Redirect(302, "/")
+		//セッションにデータを格納する
+		session := sessions.Default(c)
+		session.Set("ID", ID)
+		session.Save()
+		//Login(c, ID) // // 同じパッケージ内のログイン処理
+		c.Redirect(http.StatusMovedPermanently, "/hashiba/")
+		//c.Redirect(302, "/")
 	}
 }
 
@@ -79,4 +96,19 @@ func (pc Controller) LoginPost(c *gin.Context) {
 		log.Println("ログインできました")
 		c.Redirect(302, "/")
 	}
+}
+
+// PostLogout logout処理
+func (pc Controller) PostLogout(c *gin.Context) {
+	log.Println("ログアウト処理")
+	//セッションからデータを破棄する
+	session := sessions.Default(c)
+	log.Println("セッション取得")
+	session.Clear()
+	log.Println("クリア処理")
+	session.Save()
+
+	// ログインフォームに戻す
+	var user entity.UsersMig
+	c.HTML(http.StatusOK, "/", gin.H{"Username": user.Username})
 }

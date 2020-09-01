@@ -2,7 +2,6 @@ package main
 
 import (
 	"log"
-	"needmov/db"
 	"needmov/server"
 
 	"github.com/PuerkitoBio/goquery"
@@ -99,7 +98,7 @@ func GetChannelName() string {
 }
 
 func main() {
-	db.NewMakeDB()
+	//db.NewMakeDB()
 	server.Init()
 }
 
