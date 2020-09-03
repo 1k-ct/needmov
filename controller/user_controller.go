@@ -14,8 +14,8 @@ import (
 // Controller is user controller
 type Controller struct{}
 
-// Index is start page "/"
-func (pc Controller) Index(c *gin.Context) {
+// Start is start page "/"
+func (pc Controller) Start(c *gin.Context) {
 	c.HTML(http.StatusOK, "start.html", gin.H{"users": db.GetDBContents()})
 }
 
@@ -31,20 +31,12 @@ func (pc Controller) HashibaHome(c *gin.Context) {
 
 // Adimn adimn page "/adimn"
 func (pc Controller) Adimn(c *gin.Context) {
-	c.HTML(http.StatusOK, "adim.html", gin.H{})
+	c.HTML(http.StatusOK, "signup.html", gin.H{})
 }
 
 // SignUpGet "/signup" "signup.html"　ユーザー登録画面
 func (pc Controller) SignUpGet(c *gin.Context) {
-	ID := c.PostForm("ID")
-	//セッションにデータを格納する
-	session := sessions.Default(c)
-	session.Set("ID", ID)
-	session.Save()
-	//Login(c, ID) // // 同じパッケージ内のログイン処理
-
-	c.Redirect(http.StatusMovedPermanently, "/hashiba/")
-	//c.HTML(http.StatusOK, "signup.html", gin.H{})
+	c.HTML(http.StatusOK, "signup.html", gin.H{})
 }
 
 // SignUpPost "/signup" "signup.html" ユーザー登録
@@ -56,19 +48,12 @@ func (pc Controller) SignUpPost(c *gin.Context) {
 	} else {
 		username := c.PostForm("username")
 		password := c.PostForm("password")
-		ID := c.PostForm("ID")
 
 		// 登録ユーザーが重複していた場合にはじく処理
 		if err := db.CreateUser(username, password); err != nil {
 			c.HTML(http.StatusBadRequest, "signup.html", gin.H{"err": err})
 		}
-		//セッションにデータを格納する
-		session := sessions.Default(c)
-		session.Set("ID", ID)
-		session.Save()
-		//Login(c, ID) // // 同じパッケージ内のログイン処理
-		c.Redirect(http.StatusMovedPermanently, "/hashiba/")
-		//c.Redirect(302, "/")
+		c.Redirect(302, "/") // c.Redirect(302, "/login")
 	}
 }
 
@@ -93,8 +78,10 @@ func (pc Controller) LoginPost(c *gin.Context) {
 		c.HTML(http.StatusBadRequest, "login.html", gin.H{"err": err})
 		c.Abort()
 	} else {
+		login(c, formPassword)
 		log.Println("ログインできました")
-		c.Redirect(302, "/")
+		c.Redirect(http.StatusMovedPermanently, "/hashiba/home")
+		//c.Redirect(302, "/")
 	}
 }
 
@@ -111,4 +98,10 @@ func (pc Controller) PostLogout(c *gin.Context) {
 	// ログインフォームに戻す
 	var user entity.UsersMig
 	c.HTML(http.StatusOK, "/", gin.H{"Username": user.Username})
+}
+func login(c *gin.Context, ID string) {
+	//セッションにデータを格納する
+	session := sessions.Default(c)
+	session.Set("ID", ID)
+	session.Save()
 }

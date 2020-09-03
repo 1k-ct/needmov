@@ -24,7 +24,7 @@ func router() *gin.Engine {
 	r.Use(sessions.Sessions("mysession", store))
 	ctrl := user.Controller{}
 
-	r.GET("/", ctrl.Index)
+	r.GET("/", ctrl.Start)
 	r.GET("/admin", ctrl.Adimn)
 
 	r.GET("/signup", ctrl.SignUpGet)
@@ -38,6 +38,14 @@ func router() *gin.Engine {
 		hashiba.GET("/", ctrl.HashibaDeteil)
 		hashiba.GET("/home", ctrl.HashibaHome)
 	}
+	/*
+		menu := r.Group("/menu")
+		menu.Use(sessionCheck())
+		{
+			menu.GET("/", ctrl.HashibaDeteil)
+			menu.GET("/top", ctrl.HashibaHome)
+		}
+	*/
 	r.POST("/logout", ctrl.PostLogout)
 	return r
 }
@@ -53,7 +61,7 @@ func sessionCheck() gin.HandlerFunc {
 		// セッションがない場合、ログインフォームをだす
 		if LoginInfo.ID == nil {
 			log.Println("ログインしていません")
-			c.Redirect(http.StatusMovedPermanently, "/login")
+			c.Redirect(http.StatusMovedPermanently, "/signup")
 			c.Abort() // これがないと続けて処理されてしまう
 		} else {
 			c.Set("ID", LoginInfo.ID) // ユーザidをセット
