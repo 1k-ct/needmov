@@ -80,7 +80,7 @@ func (pc Controller) LoginPost(c *gin.Context) {
 	} else {
 		login(c, formPassword)
 		log.Println("ログインできました")
-		c.Redirect(http.StatusMovedPermanently, "/hashiba/home")
+		c.Redirect(http.StatusMovedPermanently, "/hashiba/home") // "/"
 		//c.Redirect(302, "/")
 	}
 }
@@ -96,8 +96,8 @@ func (pc Controller) PostLogout(c *gin.Context) {
 	session.Save()
 
 	// ログインフォームに戻す
-	var user entity.UsersMig
-	c.HTML(http.StatusOK, "/", gin.H{"Username": user.Username})
+	//var user entity.UsersMig
+	c.HTML(http.StatusOK, "start.html", gin.H{})
 }
 func login(c *gin.Context, ID string) {
 	//セッションにデータを格納する
