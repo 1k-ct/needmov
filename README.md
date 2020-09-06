@@ -10,4 +10,6 @@ func router() *gin.Engine {
     r.LoadHTMLGlob("templates/*.html") // あと、忘れやすい!
     
     r.GET("/", xxx.yyy)
-}
+}  
+参考
+https://github.com/Doarakko/api-challenge.git
