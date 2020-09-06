@@ -16,6 +16,8 @@ type Controller struct{}
 
 // Start is start page "/"
 func (pc Controller) Start(c *gin.Context) {
+	var sessioninfo entity.SessionInfo
+	log.Println(sessioninfo.ID)
 	c.HTML(http.StatusOK, "start.html", gin.H{"users": db.GetDBContents()})
 }
 
@@ -80,7 +82,7 @@ func (pc Controller) LoginPost(c *gin.Context) {
 	} else {
 		login(c, formPassword)
 		log.Println("ログインできました")
-		c.Redirect(http.StatusMovedPermanently, "/hashiba/home") // "/"
+		c.Redirect(http.StatusMovedPermanently, "/") // "/" "/hashiba/home"
 		//c.Redirect(302, "/")
 	}
 }

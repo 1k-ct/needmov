@@ -1,8 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"log"
-	"needmov/server"
+	youtubeapi "needmov/youtubeAPI"
 
 	"github.com/PuerkitoBio/goquery"
 	_ "github.com/go-sql-driver/mysql"
@@ -53,7 +54,12 @@ func GetChannelName() string {
 
 func main() {
 	//db.NewMakeDB()
-	server.Init()
+	//server.Init()
+	id, name, viewCount, subscriberCount, videoCount := youtubeapi.PrintChannelInfo("UC_BlXOQe5OcRC7o0GX8kp8A")
+	fmt.Println(id, name, viewCount, subscriberCount, videoCount)
+
+	id, name, description, thumbnailURL, viewCount, commentCount, likeCount, dislikeCount, uploadDate := youtubeapi.PrintVideoInfo("pV1GoNi5mFs")
+	fmt.Println(id, name, description, thumbnailURL, viewCount, commentCount, likeCount, dislikeCount, uploadDate)
 }
 
 // golang gin 認証  　->  検索
