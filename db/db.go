@@ -8,6 +8,11 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+//var (
+//	db  *gorm.DB
+//	err error
+//)
+
 // NewMakeDB dbの初期化　AutoMigrate dbの作成
 func NewMakeDB() {
 	db := ConnectGorm()
