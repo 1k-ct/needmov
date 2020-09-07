@@ -47,6 +47,8 @@ func router() *gin.Engine {
 		}
 	*/
 	r.GET("/logout", ctrl.PostLogout) //r.POST("/logout", ctrl.PostLogout)
+	r.POST("/regvideo", ctrl.CreateVideoInfo)
+	r.POST("/regchannel", ctrl.CreateChannelInfo)
 	return r
 }
 
