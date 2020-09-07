@@ -1,9 +1,9 @@
-CREATE TABLE go_sample.channel_info (
+CREATE TABLE go_sample.channel_infos (
     ID INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-    channelID VARCHAR(30),
-    channelName VARCHAR(50),
-    viewCount INT,
-    subscriberCount INT,
-    videoCount INT,
+    channel_id VARCHAR(30),
+    channel_name VARCHAR(50),
+    view_count INT,
+    subscriber_count INT,
+    video_count INT,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
