@@ -27,28 +27,28 @@ type SessionInfo struct {
 	ID interface{}
 }
 
-// VideoInfo video info
-type VideoInfo struct {
-	ID               int
-	videoID          string
-	videoName        string
-	videoDescription string
-	thumbnailURL     string
-	viewCount        uint64
-	commentCount     uint64
-	likeCount        uint64
-	dislikeCount     uint64
-	uploadDate       time.Time
-	createdAt        time.Time
+// VideoInfos video info
+type VideoInfos struct {
+	//ID               int
+	VideoID          string
+	VideoName        string
+	VideoDescription string
+	ThumbnailURL     string
+	ViewCount        uint64
+	CommentCount     uint64
+	LikeCount        uint64
+	DislikeCount     uint64
+	UploadDate       time.Time
+	CreatedAt        time.Time
 }
 
-// ChannelInfo channel info
-type ChannelInfo struct {
-	ID              uint64
-	channelID       string
-	channelName     string
-	viewCount       uint64
-	subscriberCount uint64
-	videoCount      uint64
-	createdAt       time.Time
+// ChannelInfos channel info
+type ChannelInfos struct {
+	//ID              uint64
+	ChannelID       string
+	ChannelName     string
+	ViewCount       uint64
+	SubscriberCount uint64
+	VideoCount      uint64
+	CreatedAt       time.Time
 }
