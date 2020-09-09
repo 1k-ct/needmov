@@ -13,3 +13,9 @@ func router() *gin.Engine {
 }  
 参考
 https://github.com/Doarakko/api-challenge.git
+```
+db.DeleteDBChannelInfo(id)
+```
+データーベースにないIDを選択した場合  
+errorになる => データベース消えた  
+確認がしないと
