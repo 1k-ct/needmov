@@ -1,0 +1,10 @@
+.btn--orange,
+a.btn--orange {
+  color: #fff;
+  background-color: coral;
+}
+.btn--orange:hover,
+a.btn--orange:hover {
+  color: #fff;
+  background: #f56500;
+}
