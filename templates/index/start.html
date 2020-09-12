@@ -8,31 +8,21 @@
 </head>
 
 <body>
-    <p>youtube live を、まわります</p>
+    <!--<link rel="stylesheet" href="assets/css/anima.css">-->
+    <img src="https://static.wixstatic.com/media/dd875e_91c233847a324cb68e2e65311783f399~mv2.png/v1/fill/w_251,h_251,al_c,q_85,usm_0.66_1.00_0.01/%E7%99%BD%E5%AE%AE%E3%81%BF%E3%81%BF.webp"
+        alt="白宮みみ">
+    <p><a href="/shiromiya">白宮みみ</a></p>
+    <img src="https://static.wixstatic.com/media/dd875e_6c8f9b34d1e84efe980852c933fb8b21~mv2.png/v1/fill/w_251,h_251,al_c,q_85,usm_0.66_1.00_0.01/%E7%BE%BD%E6%9F%B4%E3%81%AA%E3%81%A4%E3%81%BF.webp"
+        alt="羽柴なつみ">
+    <p><a href="/hashiba">羽柴なつみ</a></p>
+    <p>未完成</p>
     <form method="get" action="/new">
-        <p><input type="submit" value="視聴　スタート！"></p>
-    </form>
-    {{range .users}}
-    <li>{{.}}</li>
-    {{end}}
-
-    <form action="/signup" method="get">
-        <div>
-            <button>signup</button>
-        </div>
+        <p><input type="submit" value="視聴　スタート！(未完成)"></p>
     </form>
     <form action="/login" method="get">
         <div>
-            <button>login</button>
+            <button>管理者画面にlogin</button>
         </div>
-    </form>
-    <form action="/regvideo" method="post">
-        <p>video URL :<input type="text" name="videoURL" placeholder="" /></p>
-        <p><input type="submit" value="登録" /></p>
-    </form>
-    <form action="/regchannel" method="post">
-        <p>channel名 :<input type="text" name="channelURL" placeholder="" /></p>
-        <p><input type="submit" value="登録" /></p>
     </form>
 </body>
 
