@@ -19,13 +19,22 @@ func Init() {
 
 func router() *gin.Engine {
 	r := gin.Default()
+
+	r.Static("/assets", "./assets")
 	r.LoadHTMLGlob("templates/**/*") //*/**
+
 	store := cookie.NewStore([]byte("secret"))
 	r.Use(sessions.Sessions("mysession", store))
+
 	ctrl := user.Controller{}
 
 	r.GET("/", ctrl.Start)
-	r.GET("/admin", ctrl.Adimn)
+
+	u := r.Group("/admin")
+	u.Use(sessionCheck())
+	{
+		u.GET("/", ctrl.Adimn)
+	}
 
 	r.GET("/signup", ctrl.SignUpGet)
 	r.POST("/signup", ctrl.SignUpPost)
@@ -33,25 +42,24 @@ func router() *gin.Engine {
 	r.POST("/login", ctrl.LoginPost)
 
 	hashiba := r.Group("/hashiba")
-	hashiba.Use(sessionCheck())
 	{
 		hashiba.GET("/", ctrl.HashibaDeteil)
 		hashiba.GET("/home", ctrl.HashibaHome)
 	}
-	/*
-		menu := r.Group("/menu")
-		menu.Use(sessionCheck())
-		{
-			menu.GET("/", ctrl.HashibaDeteil)
-			menu.GET("/top", ctrl.HashibaHome)
-		}
-	*/
+
+	shiromiya := r.Group("/shiromiya")
+	{
+		shiromiya.GET("/", ctrl.ShiromiyaHome)
+		shiromiya.GET("/reg", ctrl.ShiromiyaRegVideo)
+	}
+
 	r.GET("/logout", ctrl.PostLogout) //r.POST("/logout", ctrl.PostLogout)
 	r.POST("/regvideo", ctrl.CreateVideoInfo)
 	r.POST("/regchannel", ctrl.CreateChannelInfo)
 	return r
 }
 
+// LoginInfo cookie 関係
 var LoginInfo entity.SessionInfo
 
 func sessionCheck() gin.HandlerFunc {
