@@ -10,10 +10,12 @@
 <body>
     <ul>
         {{range .videoInfos}}
-        <p>{{.VideoID}}</p>
-        <p>{{.VideoName}}</p>
-        <p> {{.ViewCount}}</p>
-        <p>{{.CommentCount}}</p>
+            <p>VideoID(動画のURL):{{.VideoID}}</p>
+            <p>VideoName(動画の名前):{{.VideoName}}</p>
+            <p>ViewCount(動画の視聴回数):{{.ViewCount}}</p>
+            <p>CommentCount(動画のコメントの数):{{.CommentCount}}</p>
+            <p>LikeCount(GOOD数):{{.LikeCount}}</p>　
+            <p>DislikeCount(BAD数):{{.DislikeCount}}</p>    
         {{end}}
     </ul>
 </body>
