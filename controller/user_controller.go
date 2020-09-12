@@ -18,7 +18,7 @@ type Controller struct{}
 func (pc Controller) Start(c *gin.Context) {
 	var sessioninfo entity.SessionInfo
 	log.Println(sessioninfo.ID)
-	c.HTML(http.StatusOK, "start.html", gin.H{"users": db.GetDBContents()})
+	c.HTML(http.StatusOK, "start.html", gin.H{})
 }
 
 // HashibaDeteil hashibadeteil page "/hashiba/"
@@ -31,9 +31,22 @@ func (pc Controller) HashibaHome(c *gin.Context) {
 	c.HTML(http.StatusOK, "hashibahome.html", gin.H{})
 }
 
+// ShiromiyaHome 白宮ホーム　"/shiromiya/"
+func (pc Controller) ShiromiyaHome(c *gin.Context) {
+	c.HTML(http.StatusOK, "shiromiyahome.html", gin.H{})
+}
+
+// ShiromiyaRegVideo 白宮さんのvideoDBの情報を全て表示する
+func (pc Controller) ShiromiyaRegVideo(c *gin.Context) {
+	videoInfos := db.GetDBVideoInfo()
+	c.HTML(http.StatusOK, "shiromiyadeteil.html", gin.H{
+		"videoInfos": videoInfos,
+	})
+}
+
 // Adimn adimn page "/adimn"
 func (pc Controller) Adimn(c *gin.Context) {
-	c.HTML(http.StatusOK, "signup.html", gin.H{})
+	c.HTML(http.StatusOK, "admin.html", gin.H{})
 }
 
 // SignUpGet "/signup" "signup.html"　ユーザー登録画面
