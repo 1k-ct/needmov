@@ -43,8 +43,8 @@ func router() *gin.Engine {
 
 	hashiba := r.Group("/hashiba")
 	{
-		hashiba.GET("/", ctrl.HashibaDeteil)
-		hashiba.GET("/home", ctrl.HashibaHome)
+		hashiba.GET("/", ctrl.HashibaHome)
+		hashiba.GET("/reg", ctrl.HashibaDeteil)
 	}
 
 	shiromiya := r.Group("/shiromiya")
