@@ -23,7 +23,10 @@ func (pc Controller) Start(c *gin.Context) {
 
 // HashibaDeteil hashibadeteil page "/hashiba/"
 func (pc Controller) HashibaDeteil(c *gin.Context) {
-	c.HTML(http.StatusOK, "hashibadeteil.html", gin.H{})
+	videoInfos := db.GetDBVideoInfo()
+	c.HTML(http.StatusOK, "hashibadeteil.html", gin.H{
+		"videoInfos": videoInfos,
+	})
 }
 
 // HashibaHome hashiba home page "/hashiba/home"
