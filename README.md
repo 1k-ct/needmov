@@ -20,3 +20,4 @@ db.DeleteDBChannelInfo(id)
 errorになる => データベース消えた  
 確認がしないと
 connect
+second time connect
