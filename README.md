@@ -19,5 +19,4 @@ db.DeleteDBChannelInfo(id)
 データーベースにないIDを選択した場合  
 errorになる => データベース消えた  
 確認がしないと
-connect
-second time connect
+接続確認ok
