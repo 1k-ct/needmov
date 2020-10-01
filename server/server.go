@@ -30,6 +30,8 @@ func router() *gin.Engine {
 
 	r.GET("/", ctrl.Start)
 
+	r.GET("/ping", ctrl.Connection)
+
 	u := r.Group("/admin")
 	u.Use(sessionCheck())
 	{

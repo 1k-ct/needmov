@@ -35,6 +35,7 @@ func CreateUser(username string, password string) []error {
 }
 
 //ConnectGorm connect dbの接続
+/*
 func ConnectGorm() *gorm.DB { // 下のところは自分のものに変更してください
 	DBMS := "mysql"
 	USER := "user1"
@@ -46,6 +47,21 @@ func ConnectGorm() *gorm.DB { // 下のところは自分のものに変更し�
 
 	if err != nil {
 		panic(err)
+	}
+	return db
+}
+*/
+//ConnectGorm connect dbの接続
+func ConnectGorm() *gorm.DB {
+	DBMS := "mysql"
+	USER := "root"
+	PASS := "password"
+	PROTOCOL := "tcp(mysql:3306)" //← ここのmysqlはサービス名です
+	DBNAME := "sample"
+	CONNECT := USER + ":" + PASS + "@" + PROTOCOL + "/" + DBNAME + "?parseTime=true"
+	db, err := gorm.Open(DBMS, CONNECT)
+	if err != nil {
+		panic(err.Error())
 	}
 	return db
 }

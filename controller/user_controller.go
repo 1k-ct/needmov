@@ -14,6 +14,14 @@ import (
 // Controller is user controller
 type Controller struct{}
 
+// Connection DB接続確認テスト
+func (pc Controller) Connection(c *gin.Context) {
+	db.NewMakeDB()
+	c.JSON(http.StatusOK, gin.H{
+		"message": "success",
+	})
+}
+
 // Start is start page "/"
 func (pc Controller) Start(c *gin.Context) {
 	var sessioninfo entity.SessionInfo
