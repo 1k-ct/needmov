@@ -15,6 +15,7 @@ import (
 func Init() {
 	r := router()
 	r.Run()
+	//appengine.Main()
 }
 
 func router() *gin.Engine {
