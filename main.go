@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"needmov/db"
 	"needmov/server"
 
 	"github.com/PuerkitoBio/goquery"
@@ -59,5 +60,6 @@ func main() {
 
 	//id, name, description, thumbnailURL, viewCount, commentCount, likeCount, dislikeCount, uploadDate := youtubeapi.PrintVideoInfo("pV1GoNi5mFs")
 	//fmt.Println(id, name, description, thumbnailURL, viewCount, commentCount, likeCount, dislikeCount, uploadDate)
+	db.NewMakeDB()
 	server.Init()
 }

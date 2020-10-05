@@ -3,8 +3,10 @@ package youtubeapi
 import (
 	"log"
 	"net/http"
+	"os"
 	"time"
 
+	"github.com/joho/godotenv"
 	"google.golang.org/api/googleapi/transport"
 	"google.golang.org/api/youtube/v3"
 )
@@ -45,8 +47,14 @@ func PrintChannelInfo(channelID string) (string, string, uint64, uint64, uint64)
 	return id, name, viewCount, subscriberCount, videoCount
 }
 func newClient() *http.Client {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	API_KEY := os.Getenv("API_KEY")
 	client := &http.Client{
-		Transport: &transport.APIKey{Key: ("#######################################")}, // ここ、API KEY
+		Transport: &transport.APIKey{Key: (API_KEY)}, // ここ、API KEY
 	}
 	return client
 }

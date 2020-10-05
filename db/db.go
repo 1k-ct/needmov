@@ -19,6 +19,8 @@ func NewMakeDB() {
 	defer db.Close()
 
 	db.AutoMigrate(&entity.UsersMig{})
+	db.AutoMigrate(&entity.Users{})
+	db.AutoMigrate(&entity.ChannelInfos{}, &entity.VideoInfos{})
 }
 
 // CreateUser ユーザー登録
@@ -35,13 +37,13 @@ func CreateUser(username string, password string) []error {
 }
 
 //ConnectGorm connect dbの接続
-/*
+
 func ConnectGorm() *gorm.DB { // 下のところは自分のものに変更してください
 	DBMS := "mysql"
-	USER := "user1"
-	PASS := "Password_01"
-	PROTOCOL := "tcp(localhost:3306)"
-	DBNAME := "go_sample"
+	USER := "root"
+	PASS := "password"
+	PROTOCOL := "tcp(mysql:3306)" //localhost
+	DBNAME := "sample"
 	CONNECT := USER + ":" + PASS + "@" + PROTOCOL + "/" + DBNAME
 	db, err := gorm.Open(DBMS, CONNECT)
 
@@ -50,22 +52,34 @@ func ConnectGorm() *gorm.DB { // 下のところは自分のものに変更し�
 	}
 	return db
 }
-*/
+
+/*
 //ConnectGorm connect dbの接続
 func ConnectGorm() *gorm.DB {
-	DBMS := "mysql"
-	USER := "root"
-	PASS := "password"
-	PROTOCOL := "tcp(mysql:3306)" //← ここのmysqlはサービス名です
-	DBNAME := "sample"
-	CONNECT := USER + ":" + PASS + "@" + PROTOCOL + "/" + DBNAME + "?parseTime=true"
-	db, err := gorm.Open(DBMS, CONNECT)
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	USER := os.Getenv("DB_USER")
+	PASS := os.Getenv("DB_PASS")
+	CONNECTIONNAME := os.Getenv("DB_CONNECTIONNAME")
+	DBNAME := os.Getenv("DB_NAME")
+	localConnection := USER + ":" + PASS + "@/" + DBNAME + "?parseTime=true"
+	cloudSQLConnection := USER + ":" + PASS + "@unix(/cloudsql/" + CONNECTIONNAME + ")/" + DBNAME + "?parseTime=true"
+	var db *gorm.DB
+
+	if appengine.IsAppEngine() {
+		db, err = gorm.Open("mysql", cloudSQLConnection)
+	} else {
+		db, err = gorm.Open("mysql", localConnection)
+	}
 	if err != nil {
 		panic(err.Error())
 	}
 	return db
 }
-
+*/
 // AddNewInDB DBに新しく追加する
 func AddNewInDB(id int, name string, password string, email string) { //, createdAt string
 	db := ConnectGorm()
