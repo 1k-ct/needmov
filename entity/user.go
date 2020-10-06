@@ -32,12 +32,12 @@ type VideoInfos struct {
 	//ID               int
 	VideoID          string
 	VideoName        string
-	VideoDescription string
+	VideoDescription string `gorm:"type:text"`
 	ThumbnailURL     string
-	ViewCount        uint64
-	CommentCount     uint64
-	LikeCount        uint64
-	DislikeCount     uint64
+	ViewCount        uint64 `gorm:"type:int"`
+	CommentCount     uint64 `gorm:"type:int"`
+	LikeCount        uint64 `gorm:"type:int"`
+	DislikeCount     uint64 `gorm:"type:int"`
 	UploadDate       time.Time
 	CreatedAt        time.Time
 }
@@ -47,8 +47,8 @@ type ChannelInfos struct {
 	//ID              uint64
 	ChannelID       string
 	ChannelName     string
-	ViewCount       uint64
-	SubscriberCount uint64
-	VideoCount      uint64
+	ViewCount       uint64 `gorm:"type:int"`
+	SubscriberCount uint64 `gorm:"type:int"`
+	VideoCount      uint64 `gorm:"type:int"`
 	CreatedAt       time.Time
 }
