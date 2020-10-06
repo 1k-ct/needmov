@@ -1,11 +1,15 @@
 package db
 
 import (
+	"log"
 	"needmov/crypto"
 	"needmov/entity"
+	"os"
 
 	_ "github.com/go-sql-driver/mysql" // gorm mysql import
 	"github.com/jinzhu/gorm"
+	"github.com/joho/godotenv"
+	"google.golang.org/appengine"
 )
 
 //var (
@@ -36,8 +40,25 @@ func CreateUser(username string, password string) []error {
 	return nil
 }
 
-//ConnectGorm connect dbの接続
+/*
+func ConnectGorm() *gorm.DB { // localhost
+	DBMS := "mysql"
+	USER := "user"
+	PASS := "password"
+	PROTOCOL := "tcp(localhost:3306)"
+	DBNAME := "sample"
 
+	CONNECT := USER + ":" + PASS + "@" + PROTOCOL + "/" + DBNAME + "?charset=utf8&parseTime=True&loc=Local"
+	db, err := gorm.Open(DBMS, CONNECT)
+
+	if err != nil {
+		panic(err)
+	}
+	return db
+}
+*/
+//ConnectGorm connect dbの接続
+/*
 func ConnectGorm() *gorm.DB { // 下のところは自分のものに変更してください
 	DBMS := "mysql"
 	USER := "root"
@@ -52,8 +73,8 @@ func ConnectGorm() *gorm.DB { // 下のところは自分のものに変更し�
 	}
 	return db
 }
+*/
 
-/*
 //ConnectGorm connect dbの接続
 func ConnectGorm() *gorm.DB {
 	err := godotenv.Load()
@@ -79,7 +100,7 @@ func ConnectGorm() *gorm.DB {
 	}
 	return db
 }
-*/
+
 // AddNewInDB DBに新しく追加する
 func AddNewInDB(id int, name string, password string, email string) { //, createdAt string
 	db := ConnectGorm()
