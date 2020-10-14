@@ -58,6 +58,3 @@ func (pc Controller) HashibaCreateChannelInfo(c *gin.Context) {
 	db.HashibaInsertChannelInfo(channelID, channelName, viewCount, subscriberCount, videoCount)
 	c.Redirect(http.StatusFound, "/") // http.StatusFound = 302
 }
-func (pc Controller) SelectAllCreateInfo(c *gin.Context, dbName string) error {
-
-}
