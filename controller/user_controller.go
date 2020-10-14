@@ -29,15 +29,26 @@ func (pc Controller) Start(c *gin.Context) {
 	c.HTML(http.StatusOK, "start.html", gin.H{})
 }
 
-// HashibaDeteil hashibadeteil page "/hashiba/"
+// HashibaDeteil 羽柴さんのvideoDB, channelDBの情報を全て表示する
+// "/hashiba/reg"
 func (pc Controller) HashibaDeteil(c *gin.Context) {
-	videoInfos := db.GetDBVideoInfo()
+	//videoInfos := db.GetDBVideoInfo()
+	videoInfos, err := db.AllDBGetVideoInfo("HashibaVideoInfos")
+	if err != nil {
+		log.Println(err)
+	}
+	channelInfos, err := db.AllGetDBChannelInfo("HashibaChannelInfos")
+	if err != nil {
+		log.Println(err)
+	}
 	c.HTML(http.StatusOK, "hashibadeteil.html", gin.H{
 		"videoInfos": videoInfos,
 	})
+	c.JSON(http.StatusOK, videoInfos)
+	c.JSON(http.StatusOK, channelInfos)
 }
 
-// HashibaHome hashiba home page "/hashiba/home"
+// HashibaHome 羽柴ホーム "/hashiba"
 func (pc Controller) HashibaHome(c *gin.Context) {
 	c.HTML(http.StatusOK, "hashibahome.html", gin.H{})
 }
@@ -49,10 +60,20 @@ func (pc Controller) ShiromiyaHome(c *gin.Context) {
 
 // ShiromiyaRegVideo 白宮さんのvideoDBの情報を全て表示する
 func (pc Controller) ShiromiyaRegVideo(c *gin.Context) {
-	videoInfos := db.GetDBVideoInfo()
+	//videoInfos := db.GetDBVideoInfo()
+	videoInfos, err := db.AllDBGetVideoInfo("ShiromiyaVideoInfos")
+	if err != nil {
+		log.Println(err)
+	}
+	channelInfos, err := db.AllGetDBChannelInfo("ShiromiyaChannelInfos")
+	if err != nil {
+		log.Println(err)
+	}
 	c.HTML(http.StatusOK, "shiromiyadeteil.html", gin.H{
 		"videoInfos": videoInfos,
 	})
+	c.JSON(http.StatusOK, videoInfos)
+	c.JSON(http.StatusOK, channelInfos)
 }
 
 // Adimn adimn page "/adimn"
