@@ -61,6 +61,10 @@ func router() *gin.Engine {
 	r.GET("/logout", ctrl.PostLogout) //r.POST("/logout", ctrl.PostLogout)
 	r.POST("/regvideo", ctrl.CreateVideoInfo)
 	r.POST("/regchannel", ctrl.CreateChannelInfo)
+	r.POST("/shiromiyaregvideo", ctrl.ShiromiyaCreateVideoInfo)
+	r.POST("/shiromiyaregchannel", ctrl.ShiromiyaCreateChannelInfo)
+	r.POST("/hashibaregvideo", ctrl.HashibaCreateVideoInfo)
+	r.POST("/hashibaregchannel", ctrl.HashibaCreateChannelInfo)
 
 	//r.GET("/", func(c *gin.Context) {
 	//	c.HTML(http.StatusOK, "start.html", gin.H{})
