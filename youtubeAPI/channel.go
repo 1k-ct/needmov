@@ -69,7 +69,7 @@ func newYoutubeService(client *http.Client) *youtube.Service {
 }
 
 // PrintVideoInfo return(id string, name string, description string, thumbnailURL string, viewCount uint64, commentCount uint64, likeCount uint64, dislikeCount uint64, uploadData time.Time)
-func PrintVideoInfo(videoID string) (string, string, string, string, uint64, uint64, uint64, uint64, time.Time) {
+func PrintVideoInfo(videoID string) (string, string, string, uint64, uint64, uint64, uint64, time.Time) {
 	service := newYoutubeService(newClient())
 	call := service.Videos.List([]string{"id,snippet,Statistics"}).
 		Id(videoID).
@@ -82,7 +82,7 @@ func PrintVideoInfo(videoID string) (string, string, string, string, uint64, uin
 	item := response.Items[0]
 	id := item.Id
 	name := item.Snippet.Title
-	description := item.Snippet.Description
+	//description := item.Snippet.Description
 	thumbnailURL := item.Snippet.Thumbnails.High.Url
 	viewCount := item.Statistics.ViewCount
 	commentCount := item.Statistics.CommentCount
@@ -95,5 +95,5 @@ func PrintVideoInfo(videoID string) (string, string, string, string, uint64, uin
 	if err != nil {
 		log.Fatalf("%v", err)
 	}
-	return id, name, description, thumbnailURL, viewCount, commentCount, likeCount, dislikeCount, uploadDate
+	return id, name, thumbnailURL, viewCount, commentCount, likeCount, dislikeCount, uploadDate //description
 }
