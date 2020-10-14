@@ -25,6 +25,8 @@ func NewMakeDB() {
 	db.AutoMigrate(&entity.UsersMig{})
 	db.AutoMigrate(&entity.Users{})
 	db.AutoMigrate(&entity.ChannelInfos{}, &entity.VideoInfos{})
+	db.AutoMigrate(&entity.ShiromiyaChannelInfos{}, &entity.ShiromiyaVideoInfos{})
+	db.AutoMigrate(&entity.HashibaChannelInfos{}, &entity.HashibaVideoInfos{})
 }
 
 // CreateUser ユーザー登録
@@ -41,6 +43,7 @@ func CreateUser(username string, password string) []error {
 }
 
 /*
+// ConnectGorm localhostの接続
 func ConnectGorm() *gorm.DB { // localhost
 	DBMS := "mysql"
 	USER := "user"
@@ -57,8 +60,8 @@ func ConnectGorm() *gorm.DB { // localhost
 	return db
 }
 */
-//ConnectGorm connect dbの接続
 /*
+//ConnectGorm connect dbの接続 docker
 func ConnectGorm() *gorm.DB { // 下のところは自分のものに変更してください
 	DBMS := "mysql"
 	USER := "root"
@@ -75,7 +78,7 @@ func ConnectGorm() *gorm.DB { // 下のところは自分のものに変更し�
 }
 */
 
-//ConnectGorm connect dbの接続
+//ConnectGorm connect dbの接続 本場
 func ConnectGorm() *gorm.DB {
 	err := godotenv.Load()
 	if err != nil {
