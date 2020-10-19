@@ -45,12 +45,12 @@ type VideoInfos struct {
 // ChannelInfos channel info
 type ChannelInfos struct {
 	//ID              uint64
-	ChannelID       string
-	ChannelName     string
-	ViewCount       uint64 `gorm:"type:int"`
-	SubscriberCount uint64 `gorm:"type:int"`
-	VideoCount      uint64 `gorm:"type:int"`
-	CreatedAt       time.Time
+	ChannelID       string    `json:"channel_id"`
+	ChannelName     string    `json:"channel_name"`
+	ViewCount       uint64    `gorm:"type:int" json:"view_count"`
+	SubscriberCount uint64    `gorm:"type:int" json:"subscriber_count"`
+	VideoCount      uint64    `gorm:"type:int" json:"video_count"`
+	CreatedAt       time.Time `json:"create_at"`
 }
 
 // ShiromiyaVideoInfos 白宮みみ
