@@ -10,14 +10,13 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
-	"google.golang.org/appengine"
 )
 
 // Init is server run
 func Init() {
 	r := router()
 	r.Run()
-	appengine.Main()
+	//appengine.Main()
 }
 
 func router() *gin.Engine {
@@ -83,6 +82,14 @@ func router() *gin.Engine {
 			c.Redirect(302, "/ggnew")
 		}
 	})
+	api := r.Group("/api")
+	{
+		api.GET("/ch-info", ctrl.APIAllGetChannelInfo)
+		api.GET("/ch-sel", ctrl.APISelectWho)
+		api.GET("/date-sel", ctrl.APISelectDate)
+		api.GET("/latest-ch", ctrl.APISelectLatest)
+		api.GET("/date-between", ctrl.APISelectDateBetween)
+	}
 
 	return r
 }
