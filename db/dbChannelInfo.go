@@ -26,6 +26,18 @@ func InsertChannelInfo(
 	defer db.Close()
 }
 
+/*
+func ApiInsertChannelInfo(
+	channelID string,
+	channelName string,
+	viewCount uint64,
+	subscriberCount uint64,
+	videoCount uint64,
+) {
+	var channelInfos []entity.ChannelInfos
+	db := ConnectGorm()
+}
+*/
 // GetDBChannelInfo channelInfo の DB 全て取得
 func GetDBChannelInfo() []entity.ChannelInfos {
 	db := ConnectGorm()
@@ -51,9 +63,9 @@ func AllGetDBChannelInfo(chInfo string) (interface{}, error) {
 		db.Find(&channelInfo)
 		return channelInfo, nil
 	case "ChannelInfos":
-		var videoInfo []entity.VideoInfos
-		db.Find(&videoInfo)
-		return videoInfo, nil
+		var channelInfo []entity.ChannelInfos
+		db.Find(&channelInfo)
+		return channelInfo, nil
 	default:
 		return nil, errors.New("そのdb_nameありません")
 	}
