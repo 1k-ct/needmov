@@ -1,15 +1,12 @@
 package db
 
 import (
-	"log"
+	"errors"
 	"needmov/crypto"
 	"needmov/entity"
-	"os"
 
 	_ "github.com/go-sql-driver/mysql" // gorm mysql import
 	"github.com/jinzhu/gorm"
-	"github.com/joho/godotenv"
-	"google.golang.org/appengine"
 )
 
 //var (
@@ -27,6 +24,7 @@ func NewMakeDB() {
 	db.AutoMigrate(&entity.ChannelInfos{}, &entity.VideoInfos{})
 	db.AutoMigrate(&entity.ShiromiyaChannelInfos{}, &entity.ShiromiyaVideoInfos{})
 	db.AutoMigrate(&entity.HashibaChannelInfos{}, &entity.HashibaVideoInfos{})
+	db.AutoMigrate(&entity.RegChannel{})
 }
 
 // CreateUser ユーザー登録
@@ -42,7 +40,6 @@ func CreateUser(username string, password string) []error {
 	return nil
 }
 
-/*
 // ConnectGorm localhostの接続
 func ConnectGorm() *gorm.DB { // localhost
 	DBMS := "mysql"
@@ -59,8 +56,9 @@ func ConnectGorm() *gorm.DB { // localhost
 	}
 	return db
 }
-*/
+
 /*
+
 //ConnectGorm connect dbの接続 docker
 func ConnectGorm() *gorm.DB { // 下のところは自分のものに変更してください
 	DBMS := "mysql"
@@ -77,7 +75,7 @@ func ConnectGorm() *gorm.DB { // 下のところは自分のものに変更し�
 	return db
 }
 */
-
+/*
 //ConnectGorm connect dbの接続 本場
 func ConnectGorm() *gorm.DB {
 	err := godotenv.Load()
@@ -103,7 +101,7 @@ func ConnectGorm() *gorm.DB {
 	}
 	return db
 }
-
+*/
 // AddNewInDB DBに新しく追加する
 func AddNewInDB(id int, name string, password string, email string) { //, createdAt string
 	db := ConnectGorm()
@@ -136,4 +134,40 @@ func GetUser(username string) entity.UsersMig {
 	db.First(&user, "username = ?", username)
 	db.Close()
 	return user
+}
+
+// InsterRegChannel チャンネルURLをDBに登録
+func InsterRegChannel(url string) ([]entity.RegChannel, error) {
+	db := ConnectGorm()
+	defer db.Close()
+	regch, err := existenceDBValues(url)
+	switch err {
+	case true:
+		db.Create(&entity.RegChannel{ChannelID: url})
+		return regch, nil
+	case false:
+		return regch, errors.New("登録済みです")
+	default:
+		return regch, errors.New("おかしい")
+	}
+}
+
+func existenceDBValues(url string) ([]entity.RegChannel, bool) {
+	db := ConnectGorm()
+	defer db.Close()
+	var regch []entity.RegChannel
+	db.Where("channel_id = ?", url).Find(&regch)
+	if len(regch) == 0 { //データベースに値が０個のときは成功、エラーではない
+		return regch, true
+	}
+	return regch, false //errors.New("その、channel url はすでにあります")
+}
+
+// AllGetRegCh RegChannel(db)からすべての値を取る
+func AllGetRegCh() []entity.RegChannel {
+	db := ConnectGorm()
+	defer db.Close()
+	var regch []entity.RegChannel
+	db.Find(&regch)
+	return regch
 }
