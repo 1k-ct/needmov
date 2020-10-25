@@ -89,6 +89,7 @@ func router() *gin.Engine {
 		api.GET("/date-sel", ctrl.APISelectDate)
 		api.GET("/latest-ch", ctrl.APISelectLatest)
 		api.GET("/date-between", ctrl.APISelectDateBetween)
+		api.POST("/reg", ctrl.APIInsterChURL)
 	}
 
 	return r
