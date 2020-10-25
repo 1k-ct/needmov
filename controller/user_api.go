@@ -2,12 +2,34 @@ package user
 
 import (
 	"log"
+	apierrors "needmov/APIerrors"
 	"needmov/db"
 	"needmov/entity"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
+
+// APIInsterChURL urlを登録する１つだけ
+// "api/reg?url="
+func (pc Controller) APIInsterChURL(c *gin.Context) {
+	url := c.Query("url")
+	// urlが正しいかチェック
+	if len(url) == 24 && url[0:2] == "UC" { // urlが24文字でUCで始まるのはOK
+		_, err := db.InsterRegChannel(url) // urlの登録。err は、urlが重複するかチェック
+		if err != nil {
+			//Error msg その、URLはすでにあります。
+			c.JSON(http.StatusOK, *apierrors.ErrDuplicateURL)
+		} else {
+			//Success msg 追加しました！
+			ch := entity.RegChannel{ChannelID: url}
+			c.JSON(http.StatusOK, ch)
+		}
+	} else {
+		//Error msg そのURLは正しくありません。もう一度確認お願いします！
+		c.JSON(http.StatusOK, *apierrors.ErrInvalidURL)
+	}
+}
 
 // APIAllGetChannelInfo "api/ch-info"apiで登録したデータベースを全部取る
 // "api/ch-info"
