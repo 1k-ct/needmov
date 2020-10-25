@@ -1,6 +1,7 @@
 package youtubeapi
 
 import (
+	"errors"
 	"log"
 	"net/http"
 	"os"
@@ -12,7 +13,7 @@ import (
 )
 
 // PrintChannelInfo return id string, name string, viewCount uint64, subscriberCount uint64, videoCount uint64,
-func PrintChannelInfo(channelID string) (string, string, uint64, uint64, uint64) {
+func PrintChannelInfo(channelID string) (string, string, uint64, uint64, uint64, error) {
 	service := newYoutubeService(newClient())
 	//lis := []string{"snippet", "contentDetails", "statistics"}
 	call := service.Channels.List([]string{"snippet", "contentDetails", "statistics"}).
@@ -20,7 +21,10 @@ func PrintChannelInfo(channelID string) (string, string, uint64, uint64, uint64)
 		MaxResults(1)
 	response, err := call.Do()
 	if err != nil {
-		log.Fatalf("%v", err)
+		log.Printf("%v\n", err)
+	}
+	if response.Items == nil {
+		return "", "", 1, 1, 1, errors.New("IDが無効です")
 	}
 	item := response.Items[0]
 
@@ -44,7 +48,7 @@ func PrintChannelInfo(channelID string) (string, string, uint64, uint64, uint64)
 			videoCount,
 		)
 	*/
-	return id, name, viewCount, subscriberCount, videoCount
+	return id, name, viewCount, subscriberCount, videoCount, nil
 }
 func newClient() *http.Client {
 	err := godotenv.Load()
