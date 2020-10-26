@@ -23,3 +23,11 @@ var ErrDuplicateURL = &ApplicationError{
 	Msg1:  "That URL is a duplicate.It's already in the DB.",
 	Msg2:  "そのURLは重複する。すでにDBにあります。",
 }
+
+//ErrDB データベース全般のエラーについて
+var ErrDB = &ApplicationError{
+	Code:  3,
+	Level: "Error",
+	Msg1:  "I couldn't manipulate the database.",
+	Msg2:  "データベースの操作が出来ませんでした。",
+}
