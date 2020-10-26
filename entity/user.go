@@ -53,6 +53,7 @@ type ChannelInfos struct {
 	CreatedAt       time.Time `json:"create_at"`
 }
 
+/*
 // ShiromiyaVideoInfos 白宮みみ
 type ShiromiyaVideoInfos struct {
 	//ID               int
@@ -104,7 +105,7 @@ type HashibaChannelInfos struct {
 	VideoCount      uint64 `gorm:"type:int"`
 	CreatedAt       time.Time
 }
-
+*/
 // RegChannel データベースに登録するURLを保存
 type RegChannel struct {
 	ChannelID string `json:"channel_id"`
