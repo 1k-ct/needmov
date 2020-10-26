@@ -9,14 +9,13 @@
 
 <body>
     <ul>
-        {{range .videoInfos}}
-            <p>VideoID(動画のURL):{{.VideoID}}</p>
-            <p>VideoName(動画の名前):{{.VideoName}}</p>
-            <p>ViewCount(動画の視聴回数):{{.ViewCount}}</p>
-            <p>CommentCount(動画のコメントの数):{{.CommentCount}}</p>
-            <p>LikeCount(GOOD数):{{.LikeCount}}</p>
-            <p>DislikeCount(BAD数):{{.DislikeCount}}</p>
-            <br>
+        {{range .channelInfos}}
+        <p>ChannelID(チャンネルのURL):{{.ChannelID}}</p>
+        <p>ChannelName(チャンネルの名前):{{.ChannelName}}</p>
+        <p>ViewCount(チャンネルの視聴回数):{{.ViewCount}}</p>
+        <p>SubscriberCount(チャンネルの登録者数):{{.SubscriberCount}}</p>
+        <p>VideoCount(動画数):{{.VideoCount}}</p>
+        <br>
         {{end}}
     </ul>
 </body>
