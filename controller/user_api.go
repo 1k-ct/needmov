@@ -34,7 +34,7 @@ func (pc Controller) APIInsterChURL(c *gin.Context) {
 // APIAllGetChannelInfo "api/ch-info"apiで登録したデータベースを全部取る
 // "api/ch-info"
 func (pc Controller) APIAllGetChannelInfo(c *gin.Context) {
-	channelInfos, err := db.AllGetDBChannelInfo("ChannelInfos")
+	channelInfos, err := db.GetDBChannelInfo()
 	if err != nil {
 		log.Println(err)
 	}
