@@ -22,8 +22,8 @@ func NewMakeDB() {
 	db.AutoMigrate(&entity.UsersMig{})
 	db.AutoMigrate(&entity.Users{})
 	db.AutoMigrate(&entity.ChannelInfos{}, &entity.VideoInfos{})
-	db.AutoMigrate(&entity.ShiromiyaChannelInfos{}, &entity.ShiromiyaVideoInfos{})
-	db.AutoMigrate(&entity.HashibaChannelInfos{}, &entity.HashibaVideoInfos{})
+	//db.AutoMigrate(&entity.ShiromiyaChannelInfos{}, &entity.ShiromiyaVideoInfos{})
+	//db.AutoMigrate(&entity.HashibaChannelInfos{}, &entity.HashibaVideoInfos{})
 	db.AutoMigrate(&entity.RegChannel{})
 }
 

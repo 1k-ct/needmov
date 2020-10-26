@@ -1,7 +1,6 @@
 package db
 
 import (
-	"errors"
 	"needmov/entity"
 	"time"
 )
@@ -36,14 +35,17 @@ func InsertVideoInfo(
 }
 
 // GetDBVideoInfo databaseから、Video_Infoの情報を取得
-func GetDBVideoInfo() []entity.VideoInfos {
+func GetDBVideoInfo() ([]entity.VideoInfos, error) {
 	db := ConnectGorm()
 	var videoInfo []entity.VideoInfos
-	db.Find(&videoInfo)
+	if err := db.Find(&videoInfo).Error; err != nil {
+		return nil, err
+	}
 	db.Close()
-	return videoInfo
+	return videoInfo, nil
 }
 
+/*
 // AllDBGetVideoInfo 選択したDB(videoInfo)の情報をすべて取得する
 //"HashibaVideoInfos","ShiromiyaVideoInfos","VideoInfos"
 func AllDBGetVideoInfo(videoInfo string) (interface{}, error) {
@@ -67,7 +69,7 @@ func AllDBGetVideoInfo(videoInfo string) (interface{}, error) {
 		return nil, errors.New("そのdb_nameありません")
 	}
 }
-
+*/
 // DeleteDBVideoInfo 選択したidをVideoInfo DB　から削除
 func DeleteDBVideoInfo(id int) {
 	db := ConnectGorm()
@@ -77,6 +79,7 @@ func DeleteDBVideoInfo(id int) {
 	db.Close()
 }
 
+/*
 // ShiromiyaInsertVideoInfo 白宮の動画情報をDBに登録
 func ShiromiyaInsertVideoInfo(
 	//id int,
@@ -136,3 +139,4 @@ func HashibaInsertVideoInfo(
 		UploadDate:   uploadDate,
 	})
 }
+*/

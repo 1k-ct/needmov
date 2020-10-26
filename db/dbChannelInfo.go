@@ -1,7 +1,6 @@
 package db
 
 import (
-	"errors"
 	"needmov/entity"
 )
 
@@ -39,14 +38,17 @@ func ApiInsertChannelInfo(
 }
 */
 // GetDBChannelInfo channelInfo の DB 全て取得
-func GetDBChannelInfo() []entity.ChannelInfos {
+func GetDBChannelInfo() ([]entity.ChannelInfos, error) {
 	db := ConnectGorm()
+	defer db.Close()
 	var channelInfo []entity.ChannelInfos
-	db.Find(&channelInfo)
-	db.Close()
-	return channelInfo
+	if err := db.Find(&channelInfo).Error; err != nil {
+		return nil, err
+	}
+	return channelInfo, nil
 }
 
+/*
 // AllGetDBChannelInfo 選択したDB(channelInfo)の情報をすべて取得する
 //"ShiromiyaChannelInfos","HashibaChannelInfos","ChannelInfos"
 func AllGetDBChannelInfo(chInfo string) (interface{}, error) {
@@ -74,7 +76,7 @@ func AllGetDBChannelInfo(chInfo string) (interface{}, error) {
 	//db.Close()
 	//return channelInfo
 }
-
+*/
 // DeleteDBChannelInfo 選択したidをchannelInfo DB から削除
 func DeleteDBChannelInfo(id int) {
 	db := ConnectGorm()
@@ -83,6 +85,8 @@ func DeleteDBChannelInfo(id int) {
 	db.Delete(&channelInfo)
 	db.Close()
 }
+
+/*
 func ShiromiyaInsertChannelInfo(
 	//id uint64,
 	channelID string,
@@ -123,3 +127,4 @@ func HashibaInsertChannelInfo(
 		VideoCount:      videoCount,
 	})
 }
+*/
