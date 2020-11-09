@@ -10,21 +10,24 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
+	"google.golang.org/appengine"
 )
 
 // Init is server run
 func Init() {
-	r := router()
+	r := router(true)
 	r.Run()
-	//appengine.Main()
+	appengine.Main()
 }
 
-func router() *gin.Engine {
+func router(gae bool) *gin.Engine {
 	r := gin.Default()
-
-	r.Static("/assets", "./assets")
-	r.LoadHTMLGlob("templates/**/*") //*/**
-
+	if !gae {
+		r.LoadHTMLGlob("/home/sato/go/src/github.com/1k-ct/nomv/src/needmov/templates/**/*") //*/**
+	} else {
+		r.Static("/assets", "./assets")
+		r.LoadHTMLGlob("templates/**/*")
+	}
 	store := cookie.NewStore([]byte("secret"))
 	r.Use(sessions.Sessions("mysession", store))
 
@@ -90,6 +93,7 @@ func router() *gin.Engine {
 		api.GET("/latest-ch", ctrl.APISelectLatest)
 		api.GET("/date-between", ctrl.APISelectDateBetween)
 		api.POST("/reg", ctrl.APIInsterChURL)
+		api.POST("/pri", ctrl.APIInsterChInfo)
 	}
 
 	return r
