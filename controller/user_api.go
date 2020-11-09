@@ -10,6 +10,20 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// APIInsterChInfo ch情報をjsonで受け取りdbに保存する
+// "api/pri" "POST" bindJSON entity.ChannelInfos = ch
+func (pc Controller) APIInsterChInfo(c *gin.Context) {
+	var ch entity.ChannelInfos
+	if err := c.BindJSON(&ch); err != nil {
+		c.JSON(http.StatusBadRequest, *apierrors.ErrJson)
+		return
+	}
+	// ch.CreatedAt(time.Time) は、登録しない
+	db.InsertChannelInfo(ch.ChannelID, ch.ChannelName, ch.ViewCount, ch.SubscriberCount, ch.VideoCount)
+	// msg => ch で返ってくる"create_at": "0001-01-01T00:00:00Z"　エラーではない
+	c.JSON(http.StatusOK, gin.H{"msg": ch})
+}
+
 // APIInsterChURL urlを登録する１つだけ
 // "api/reg?url="
 func (pc Controller) APIInsterChURL(c *gin.Context) {
@@ -47,7 +61,11 @@ func (pc Controller) APISelectWho(c *gin.Context) {
 	db := db.ConnectGorm()
 	var chInfos []entity.ChannelInfos
 	who := c.Query("who-ch")
-	db.Where("channel_id = ?", who).Find(&chInfos)
+
+	err := db.Where("channel_id = ?", who).Find(&chInfos).Error
+	if err != nil {
+		log.Printf(":%v", err)
+	}
 	c.JSON(http.StatusOK, chInfos)
 }
 
