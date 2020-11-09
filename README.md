@@ -22,9 +22,14 @@ errorになる => データベース消えた
 接続確認ok
   
 docker/api/Dockerfile  
-下の無くてもいい
-#RUN go get github.com/gin-contrib/sessions
-#RUN go get github.com/gin-contrib/sessions/cookie
-#RUN go get golang.org/x/crypto/bcrypt
-#RUN go get google.golang.org/api/googleapi/transport
-#RUN go get google.golang.org/api/youtube/v3
+下の無くてもいい  
+#RUN go get github.com/gin-contrib/sessions  
+#RUN go get github.com/gin-contrib/sessions/cookie  
+#RUN go get golang.org/x/crypto/bcrypt  
+#RUN go get google.golang.org/api/googleapi/transport  
+#RUN go get google.golang.org/api/youtube/v3  
+
+スライス  
+var t []string -> nil  
+t := []string{} -> 非nil(JSONオブジェクト)  
+JSONオブジェクトをエンコードするときは非nilスライスが優先されます。  

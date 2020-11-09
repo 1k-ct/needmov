@@ -2,9 +2,11 @@ package user
 
 import (
 	"log"
+	apierrors "needmov/APIerrors"
 	"needmov/crypto"
 	"needmov/db"
 	"needmov/entity"
+	user "needmov/service"
 	"net/http"
 
 	"github.com/gin-contrib/sessions"
@@ -32,24 +34,28 @@ func (pc Controller) Start(c *gin.Context) {
 // HashibaDeteil 羽柴さんのvideoDB, channelDBの情報を全て表示する
 // "/hashiba/reg"
 func (pc Controller) HashibaDeteil(c *gin.Context) {
+	var s user.Service
+	var url string = "UC_BlXOQe5OcRC7o0GX8kp8A" //羽柴チャンネル　特別です！
 	//videoInfos := db.GetDBVideoInfo()
-	videoInfos, err := db.AllDBGetVideoInfo("HashibaVideoInfos")
+	channelInfos, err := s.GetSomeoneChannelInfo(c, url)
 	if err != nil {
-		log.Println(err)
+		c.AbortWithStatusJSON(404, apierrors.ErrDB)
 	}
-	channelInfos, err := db.AllGetDBChannelInfo("HashibaChannelInfos")
-	if err != nil {
-		log.Println(err)
-	}
+	/*
+		channelInfos, err := db.GetDBChannelInfo()
+		if err != nil {
+			log.Println(err)
+		}
+	*/
 	c.HTML(http.StatusOK, "hashibadeteil.html", gin.H{
-		"videoInfos": videoInfos,
+		"channelInfos": channelInfos,
 	})
-	c.JSON(http.StatusOK, videoInfos)
 	c.JSON(http.StatusOK, channelInfos)
 }
 
 // HashibaHome 羽柴ホーム "/hashiba"
 func (pc Controller) HashibaHome(c *gin.Context) {
+	//c.AbortWithStatusJSON(404, apierrors.ErrInvalidURL)
 	c.HTML(http.StatusOK, "hashibahome.html", gin.H{})
 }
 
@@ -60,19 +66,22 @@ func (pc Controller) ShiromiyaHome(c *gin.Context) {
 
 // ShiromiyaRegVideo 白宮さんのvideoDBの情報を全て表示する
 func (pc Controller) ShiromiyaRegVideo(c *gin.Context) {
-	//videoInfos := db.GetDBVideoInfo()
-	videoInfos, err := db.AllDBGetVideoInfo("ShiromiyaVideoInfos")
+	var s user.Service
+	var url string = "UCtzCQnCT9E4o6U3mHHSHbQQ" //白宮チャンネル　特別です！
+
+	/*
+		videoInfos, err := db.GetDBVideoInfo()
+		if err != nil {
+			log.Println(err)
+		}
+	*/
+	channelInfos, err := s.GetSomeoneChannelInfo(c, url)
 	if err != nil {
-		log.Println(err)
-	}
-	channelInfos, err := db.AllGetDBChannelInfo("ShiromiyaChannelInfos")
-	if err != nil {
-		log.Println(err)
+		c.AbortWithStatusJSON(404, apierrors.ErrDB)
 	}
 	c.HTML(http.StatusOK, "shiromiyadeteil.html", gin.H{
-		"videoInfos": videoInfos,
+		"channelInfos": channelInfos,
 	})
-	c.JSON(http.StatusOK, videoInfos)
 	c.JSON(http.StatusOK, channelInfos)
 }
 
