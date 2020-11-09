@@ -31,3 +31,9 @@ var ErrDB = &ApplicationError{
 	Msg1:  "I couldn't manipulate the database.",
 	Msg2:  "データベースの操作が出来ませんでした。",
 }
+var ErrJson = &ApplicationError{
+	Code:  4,
+	Level: "Error",
+	Msg1:  "I couldn't read the json.",
+	Msg2:  "jsonの読み取りか出来ませんでした。",
+}
