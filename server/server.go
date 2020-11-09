@@ -143,9 +143,8 @@ func sessionCheck() gin.HandlerFunc {
 var url string = "https://virtual-youtuber.userlocal.jp/lives"
 
 func startCruise(url string) func() (string, bool) {
-	dataLink := GetLivingVideo(url) //動画をスクレイピングしてくる
-	log.Println("スクレイピング出来たよ！")
-	lenDataLink := len(dataLink) // 動画の本数
+	dataLink := GetLivingVideo(url) //動画を取ってくる
+	lenDataLink := len(dataLink)    // 動画の本数
 	//fmt.Println(lenDataLink)
 	n := -1
 	return func() (string, bool) {
