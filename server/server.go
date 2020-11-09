@@ -87,12 +87,31 @@ func router(gae bool) *gin.Engine {
 	})
 	api := r.Group("/api")
 	{
+		//"api/ch-info" apiで登録したデータベースを全部取る "api/ch-info"
 		api.GET("/ch-info", ctrl.APIAllGetChannelInfo)
+
+		// 選んだ人の、チャンネルを取る "api/ch-sel?who-ch="
+		// （例）　"api/ch-sel?who-ch=UCxxxxxxxxxxxxxxxxxxxxxx"
 		api.GET("/ch-sel", ctrl.APISelectWho)
+
+		// 選んだ人と日付？ "api/date-sel?who-ch=&date="
+		// （例）　"api/date-sel?who-ch=&date=2020-01-20"
 		api.GET("/date-sel", ctrl.APISelectDate)
+
+		// 選んだ人と最新の日付 "api/latest-ch?who-ch="
+		// （例）　"api/latest-ch?who-ch=2020-02-05"
 		api.GET("/latest-ch", ctrl.APISelectLatest)
+
+		// 選んだ人とBETWEEN日付の選択 "api/date-between?who-ch=&a=&b="
+		// （例）　"api/date-between?who-ch=UCxxxxxxxxxxxxxxxxxxxxxx&a=2020-10-10&b=2020-10-20"
+		// 2020-10-10から2020-10-20の間でURLで指定したチャンネル情報です。
 		api.GET("/date-between", ctrl.APISelectDateBetween)
+
+		// urlを登録する１つだけ "api/reg?url="
+		// （例） "api/reg?url=UCxxxxxxxxxxxxxxxxxxxxxx"
 		api.POST("/reg", ctrl.APIInsterChURL)
+
+		// ch情報をjsonで受け取りdbに保存する "api/pri" "POST" bindJSON entity.ChannelInfos = ch
 		api.POST("/pri", ctrl.APIInsterChInfo)
 	}
 
