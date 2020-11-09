@@ -38,7 +38,8 @@ func InsertVideoInfo(
 func GetDBVideoInfo() ([]entity.VideoInfos, error) {
 	db := ConnectGorm()
 	var videoInfo []entity.VideoInfos
-	if err := db.Find(&videoInfo).Error; err != nil {
+	err := db.Find(&videoInfo).Error
+	if err != nil {
 		return nil, err
 	}
 	db.Close()

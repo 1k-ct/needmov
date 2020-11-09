@@ -42,7 +42,8 @@ func GetDBChannelInfo() ([]entity.ChannelInfos, error) {
 	db := ConnectGorm()
 	defer db.Close()
 	var channelInfo []entity.ChannelInfos
-	if err := db.Find(&channelInfo).Error; err != nil {
+	err := db.Find(&channelInfo).Error
+	if err != nil {
 		return nil, err
 	}
 	return channelInfo, nil
