@@ -5,7 +5,6 @@ import (
 	"context"
 	"log"
 	"needmov/db"
-	"needmov/entity"
 	"needmov/server"
 	youtubeapi "needmov/youtubeAPI"
 	"net/http"
@@ -26,7 +25,7 @@ func main() {
 		fmt.Println(id, name, viewCount, subscriberCount, videoCount)
 	*/
 
-	db.DropDBGorm(&entity.ChannelInfos{})
+	// db.DropDBGorm(&entity.ChannelInfos{})
 	db.NewMakeDB()
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
