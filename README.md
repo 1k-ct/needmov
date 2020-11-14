@@ -3,7 +3,7 @@ https://needmov239087.df.r.appspot.com/api/ch-info
 まずは、このURLを見てきてください。  
 これは登録してある人のチャンネルの簡単な情報を表示しています。
 ## 使い方
-./server/server.go 88行目からを見てください  
+./server/server.go 88行目[ここ](https://github.com/1k-ct/needmov/blob/db%E3%81%BE%E3%81%A8%E3%82%81%E3%81%9F/server/server.go#L88)からを見てください  
 補足で  ./controller/user_api.go　も見てみてください。
 ### /api/ch-infoにしていろいろ見てみください
 - チャンネルURLを指定する  
