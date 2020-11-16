@@ -110,3 +110,27 @@ type HashibaChannelInfos struct {
 type RegChannel struct {
 	ChannelID string `json:"channel_id"`
 }
+
+// Data コメントのデータ(api)
+type Data struct {
+	BadgeURL        string `json:"badgeUrl"`
+	AuthorType      string `json:"authorType"`
+	IsVerified      bool   `json:"isVerified"`
+	IsChatOwner     bool   `json:"isChatOwner"`
+	IsChatSponsor   bool   `json:"isChatSponsor"`
+	IsChatModerator bool   `json:"isChatModerator"`
+	ChannelID       string `json:"channelId"`
+	Name            string `json:"name"`
+	ImageURL        string `json:"imageUrl"`
+
+	Type         string  `json:"type"`
+	ID           string  `json:"id"`
+	Timestamp    int64   `gorm:"type:BIGINT" json:"timestamp"`
+	ElapsedTime  string  `json:"elapsedTime"`
+	Datetime     string  `json:"datetime"`
+	Message      string  `gorm:"type:text" json:"message"`
+	AmountValue  float64 `json:"amountValue"`
+	AmountString string  `json:"amountString"`
+	Currency     string  `json:"currency"`
+	BgColor      float64 `json:"bgColor"`
+}
