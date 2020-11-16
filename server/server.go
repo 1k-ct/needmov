@@ -113,6 +113,8 @@ func router(gae bool) *gin.Engine {
 
 		// ch情報をjsonで受け取りdbに保存する "api/pri" "POST" bindJSON entity.ChannelInfos = ch
 		api.POST("/pri", ctrl.APIInsterChInfo)
+		// コメントデータをdbに保存する。"api/data" "POST" bindJSON entity.Data
+		api.POST("/data", ctrl.APIInsertCommentData)
 	}
 
 	return r
