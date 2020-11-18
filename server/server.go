@@ -113,8 +113,44 @@ func router(gae bool) *gin.Engine {
 
 		// ch情報をjsonで受け取りdbに保存する "api/pri" "POST" bindJSON entity.ChannelInfos = ch
 		api.POST("/pri", ctrl.APIInsterChInfo)
-		// コメントデータをdbに保存する。"api/data" "POST" bindJSON entity.Data
-		api.POST("/data", ctrl.APIInsertCommentData)
+		comme := api.Group("comme")
+		{
+			// コメントデータをdbに保存する。"api/data" "POST" bindJSON entity.Data
+			comme.POST("/data", ctrl.APIInsertCommentData)
+
+			// name ? その人(name)が書いたコメント、チャンネル内全て
+			// api/comme/namesel?name=xxx
+			comme.GET("/name_sel", ctrl.CommeName)
+
+			// name ? and video_id ? その人(name)が書いたコメント、動画内全て
+			// api/comme/namecommesel?name=xxx&id=xxx(url)
+			comme.GET("/namecomme_sel", ctrl.CommeNameCom)
+
+			// type ? (superChat) そのチャンネルのsuperChat全て
+			// api/comme/allsc
+			comme.GET("/all_sc", ctrl.CommeAllSC) // 多分消す！！
+
+			// type ? (superChat) and video_id(url) その動画内でのsuperChat全て
+			// api/comme/videosc?chid=xxx&id=xxx
+			comme.GET("video_sc", ctrl.CommeVideoSC)
+
+			// type ? (superChat) and name ? その人(name)のsuperChatチャンネル内全て
+			// api/comme/namesc?name=xxx&chid=xxx
+			comme.GET("/name_sc", ctrl.CommeNameSC)
+
+			// type ? (superChat) and name ? video_id(url) ?　その人(name)のsuperChat動画内全て
+			// api/comme/namesc?name=xxx&id=xxx&chid=xxx
+			comme.GET("/namevideo_sc", ctrl.CommeNameVideoSC)
+
+			// message ? (like) そのチャンネルでコメントを検索、全て
+			// api/comme/chmsg?chid=xxx&msg=xxx
+			comme.GET("/chmsg_simi", ctrl.CommeChMsg)
+			// message ? (like) video_id ? その動画内でのコメント検索、全て
+			// api/comme/chvimsg?chid=xxx&id=xxx&msg=xxx
+			comme.GET("/chvimsg_simi", ctrl.CommeChViMsg)
+
+			// ...coming soon!!!
+		}
 	}
 
 	return r
