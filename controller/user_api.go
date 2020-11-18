@@ -102,18 +102,3 @@ func (pc Controller) APISelectDateBetween(c *gin.Context) {
 }
 
 //func (pc Controller) API (c *gin.Context) {}
-
-// APIInsertCommentData データベースにentity.Dataを登録する。
-// "api/data" "POST" binding database
-func (pc Controller) APIInsertCommentData(c *gin.Context) {
-	var d entity.Data
-	if err := c.BindJSON(&d); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"msg": "error"})
-		return
-	}
-	if err := db.CreateDBSelfFn(&d); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"msg": err})
-		return
-	}
-	c.JSON(http.StatusOK, &d)
-}
