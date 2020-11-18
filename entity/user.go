@@ -113,24 +113,26 @@ type RegChannel struct {
 
 // Data コメントのデータ(api)
 type Data struct {
-	BadgeURL        string `json:"badgeUrl"`
-	AuthorType      string `json:"authorType"`
-	IsVerified      bool   `json:"isVerified"`
-	IsChatOwner     bool   `json:"isChatOwner"`
-	IsChatSponsor   bool   `json:"isChatSponsor"`
-	IsChatModerator bool   `json:"isChatModerator"`
-	ChannelID       string `json:"channelId"`
+	MasterChannelID string `json:"master_channel_id"`
+	VideoURL        string `json:"video_url"`
+	BadgeURL        string `json:"badge_url"`
+	AuthorType      string `json:"author_type"`
+	IsVerified      bool   `json:"is_verified"`
+	IsChatOwner     bool   `json:"is_chat_owner"`
+	IsChatSponsor   bool   `json:"is_chat_sponsor"`
+	IsChatModerator bool   `json:"is_chat_moderator"`
+	ChannelID       string `json:"channel_id"`
 	Name            string `json:"name"`
-	ImageURL        string `json:"imageUrl"`
+	ImageURL        string `json:"image_url"`
 
 	Type         string  `json:"type"`
-	ID           string  `json:"id"`
+	SID          string  `json:"sid"`
 	Timestamp    int64   `gorm:"type:BIGINT" json:"timestamp"`
-	ElapsedTime  string  `json:"elapsedTime"`
+	ElapsedTime  string  `json:"elapsed_time"`
 	Datetime     string  `json:"datetime"`
 	Message      string  `gorm:"type:text" json:"message"`
-	AmountValue  float64 `json:"amountValue"`
-	AmountString string  `json:"amountString"`
+	AmountValue  float64 `json:"amount_value"`
+	AmountString string  `json:"amount_string"`
 	Currency     string  `json:"currency"`
-	BgColor      float64 `json:"bgColor"`
+	BgColor      float64 `json:"bg_color"`
 }
