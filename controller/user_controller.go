@@ -35,18 +35,11 @@ func (pc Controller) Start(c *gin.Context) {
 // "/hashiba/reg"
 func (pc Controller) HashibaDeteil(c *gin.Context) {
 	var s user.Service
-	var url string = "UC_BlXOQe5OcRC7o0GX8kp8A" //羽柴チャンネル　特別です！
-	//videoInfos := db.GetDBVideoInfo()
+	var url string = "UC_BlXOQe5OcRC7o0GX8kp8A" //羽柴チャンネルのID
 	channelInfos, err := s.GetSomeoneChannelInfo(c, url)
 	if err != nil {
 		c.AbortWithStatusJSON(404, apierrors.ErrDB)
 	}
-	/*
-		channelInfos, err := db.GetDBChannelInfo()
-		if err != nil {
-			log.Println(err)
-		}
-	*/
 	c.HTML(http.StatusOK, "hashibadeteil.html", gin.H{
 		"channelInfos": channelInfos,
 	})
@@ -55,7 +48,6 @@ func (pc Controller) HashibaDeteil(c *gin.Context) {
 
 // HashibaHome 羽柴ホーム "/hashiba"
 func (pc Controller) HashibaHome(c *gin.Context) {
-	//c.AbortWithStatusJSON(404, apierrors.ErrInvalidURL)
 	c.HTML(http.StatusOK, "hashibahome.html", gin.H{})
 }
 
@@ -67,14 +59,8 @@ func (pc Controller) ShiromiyaHome(c *gin.Context) {
 // ShiromiyaRegVideo 白宮さんのvideoDBの情報を全て表示する
 func (pc Controller) ShiromiyaRegVideo(c *gin.Context) {
 	var s user.Service
-	var url string = "UCtzCQnCT9E4o6U3mHHSHbQQ" //白宮チャンネル　特別です！
+	var url string = "UCtzCQnCT9E4o6U3mHHSHbQQ" //白宮チャンネルID
 
-	/*
-		videoInfos, err := db.GetDBVideoInfo()
-		if err != nil {
-			log.Println(err)
-		}
-	*/
 	channelInfos, err := s.GetSomeoneChannelInfo(c, url)
 	if err != nil {
 		c.AbortWithStatusJSON(404, apierrors.ErrDB)
@@ -109,7 +95,7 @@ func (pc Controller) SignUpPost(c *gin.Context) {
 		if err := db.CreateUser(username, password); err != nil {
 			c.HTML(http.StatusBadRequest, "signup.html", gin.H{"err": err})
 		}
-		c.Redirect(302, "/") // c.Redirect(302, "/login")
+		c.Redirect(302, "/")
 	}
 }
 
@@ -121,13 +107,8 @@ func (pc Controller) LoginGet(c *gin.Context) {
 // LoginPost "/login" ユーザーログイン
 func (pc Controller) LoginPost(c *gin.Context) {
 	// DBから取得したユーザーパスワード(Hash)
-	//dbPassword := db.GetUser(c.PostForm("username")).Password
 	dbPassword := db.GetUser(c.PostForm("username")).Password
-	//log.Println("some numbers1")
-	//log.Println(dbPassword)
-	// フォームから取得したユーザーパスワード
 	formPassword := c.PostForm("password")
-	//log.Println(formPassword)
 	// ユーザーパスワードの比較
 	if err := crypto.CompareHashAndPassword(dbPassword, formPassword); err != nil {
 		log.Println("ログインできませんでした")
@@ -136,23 +117,18 @@ func (pc Controller) LoginPost(c *gin.Context) {
 	} else {
 		login(c, formPassword)
 		log.Println("ログインできました")
-		c.Redirect(http.StatusMovedPermanently, "/") // "/" "/hashiba/home"
-		//c.Redirect(302, "/")
+		c.Redirect(http.StatusMovedPermanently, "/")
 	}
 }
 
 // PostLogout logout処理
 func (pc Controller) PostLogout(c *gin.Context) {
-	log.Println("ログアウト処理")
 	//セッションからデータを破棄する
 	session := sessions.Default(c)
-	log.Println("セッション取得")
 	session.Clear()
-	log.Println("クリア処理")
+	log.Println("session clear")
 	session.Save()
 
-	// ログインフォームに戻す
-	//var user entity.UsersMig
 	c.HTML(http.StatusOK, "start.html", gin.H{})
 }
 func login(c *gin.Context, ID string) {

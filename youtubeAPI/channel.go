@@ -15,7 +15,6 @@ import (
 // PrintChannelInfo return id string, name string, viewCount uint64, subscriberCount uint64, videoCount uint64,
 func PrintChannelInfo(channelID string) (string, string, uint64, uint64, uint64, error) {
 	service := newYoutubeService(newClient())
-	//lis := []string{"snippet", "contentDetails", "statistics"}
 	call := service.Channels.List([]string{"snippet", "contentDetails", "statistics"}).
 		Id(channelID).
 		MaxResults(1)
@@ -27,27 +26,11 @@ func PrintChannelInfo(channelID string) (string, string, uint64, uint64, uint64,
 		return "", "", 1, 1, 1, errors.New("IDが無効です")
 	}
 	item := response.Items[0]
-
 	id := item.Id
 	name := item.Snippet.Title
-	//description := item.Snippet.Description
-	//thumbnailURL := item.Snippet.Thumbnails.High.Url
-	//playlistID := item.ContentDetails.RelatedPlaylists.Uploads
 	viewCount := item.Statistics.ViewCount
 	subscriberCount := item.Statistics.SubscriberCount
 	videoCount := item.Statistics.VideoCount
-	/*
-		fmt.Printf("channel id: %v\n\nチャンネル名: \n%v\n\n説明: %v\n\nサムネイルURL: %v\n\nplaylist id: %v\n\n総再生回数: %v\n\nチャンネル登録者数: %v\n\n動画数: %v\n",
-			id,
-			name,
-			description,
-			thumbnailURL,
-			playlistID,
-			viewCount,
-			subscriberCount,
-			videoCount,
-		)
-	*/
 	return id, name, viewCount, subscriberCount, videoCount, nil
 }
 func newClient() *http.Client {
@@ -82,22 +65,17 @@ func PrintVideoInfo(videoID string) (string, string, string, uint64, uint64, uin
 	if err != nil {
 		log.Fatalf("%v", err)
 	}
-
 	item := response.Items[0]
 	id := item.Id
 	name := item.Snippet.Title
-	//description := item.Snippet.Description
 	thumbnailURL := item.Snippet.Thumbnails.High.Url
 	viewCount := item.Statistics.ViewCount
 	commentCount := item.Statistics.CommentCount
 	likeCount := item.Statistics.LikeCount
 	dislikeCount := item.Statistics.DislikeCount
-	//channelID := item.Snippet.ChannelId
-	//categoryID := item.Snippet.CategoryId
-	//categoryName := getVideoCategory(categoryID)
 	uploadDate, err := time.Parse(time.RFC3339, item.Snippet.PublishedAt)
 	if err != nil {
 		log.Fatalf("%v", err)
 	}
-	return id, name, thumbnailURL, viewCount, commentCount, likeCount, dislikeCount, uploadDate //description
+	return id, name, thumbnailURL, viewCount, commentCount, likeCount, dislikeCount, uploadDate
 }

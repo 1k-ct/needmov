@@ -60,7 +60,7 @@ func router(gae bool) *gin.Engine {
 		shiromiya.GET("/reg", ctrl.ShiromiyaRegVideo)
 	}
 
-	r.GET("/logout", ctrl.PostLogout) //r.POST("/logout", ctrl.PostLogout)
+	r.GET("/logout", ctrl.PostLogout)
 	r.POST("/regvideo", ctrl.CreateVideoInfo)
 	r.POST("/regchannel", ctrl.CreateChannelInfo)
 	r.POST("/shiromiyaregvideo", ctrl.ShiromiyaCreateVideoInfo)
@@ -68,10 +68,6 @@ func router(gae bool) *gin.Engine {
 	r.POST("/hashibaregvideo", ctrl.HashibaCreateVideoInfo)
 	r.POST("/hashibaregchannel", ctrl.HashibaCreateChannelInfo)
 
-	//r.GET("/", func(c *gin.Context) {
-	//	c.HTML(http.StatusOK, "start.html", gin.H{})
-	//})
-	//r.GET("/new", ctrl.VideoStart)
 	r.GET("/ggnew", ctrl.RedirectGGNew)
 	r.GET("/stoppoint", ctrl.Stoppoint)
 
@@ -91,24 +87,24 @@ func router(gae bool) *gin.Engine {
 		api.GET("/ch-info", ctrl.APIAllGetChannelInfo)
 
 		// 選んだ人の、チャンネルを取る "api/ch-sel?who-ch="
-		// （例）　"api/ch-sel?who-ch=UCxxxxxxxxxxxxxxxxxxxxxx"
+		// "api/ch-sel?who-ch=UCxxxxxxxxxxxxxxxxxxxxxx"
 		api.GET("/ch-sel", ctrl.APISelectWho)
 
 		// 選んだ人と日付？ "api/date-sel?who-ch=&date="
-		// （例）　"api/date-sel?who-ch=&date=2020-01-20"
+		// "api/date-sel?who-ch=&date=2020-01-20"
 		api.GET("/date-sel", ctrl.APISelectDate)
 
 		// 選んだ人と最新の日付 "api/latest-ch?who-ch="
-		// （例）　"api/latest-ch?who-ch=2020-02-05"
+		// "api/latest-ch?who-ch=2020-02-05"
 		api.GET("/latest-ch", ctrl.APISelectLatest)
 
 		// 選んだ人とBETWEEN日付の選択 "api/date-between?who-ch=&a=&b="
-		// （例）　"api/date-between?who-ch=UCxxxxxxxxxxxxxxxxxxxxxx&a=2020-10-10&b=2020-10-20"
+		// "api/date-between?who-ch=UCxxxxxxxxxxxxxxxxxxxxxx&a=2020-10-10&b=2020-10-20"
 		// 2020-10-10から2020-10-20の間でURLで指定したチャンネル情報です。
 		api.GET("/date-between", ctrl.APISelectDateBetween)
 
 		// urlを登録する１つだけ "api/reg?url="
-		// （例） "api/reg?url=UCxxxxxxxxxxxxxxxxxxxxxx"
+		// "api/reg?url=UCxxxxxxxxxxxxxxxxxxxxxx"
 		api.POST("/reg", ctrl.APIInsterChURL)
 
 		// ch情報をjsonで受け取りdbに保存する "api/pri" "POST" bindJSON entity.ChannelInfos = ch
@@ -128,7 +124,7 @@ func router(gae bool) *gin.Engine {
 
 			// type ? (superChat) そのチャンネルのsuperChat全て
 			// api/comme/allsc
-			comme.GET("/all_sc", ctrl.CommeAllSC) // 多分消す！！
+			comme.GET("/all_sc", ctrl.CommeAllSC) // もし、他のチャンネルが登録されれば消す
 
 			// type ? (superChat) and video_id(url) その動画内でのsuperChat全て
 			// api/comme/videosc?chid=xxx&id=xxx
@@ -149,7 +145,6 @@ func router(gae bool) *gin.Engine {
 			// api/comme/chvimsg?chid=xxx&id=xxx&msg=xxx
 			comme.GET("/chvimsg_simi", ctrl.CommeChViMsg)
 
-			// ...coming soon!!!
 		}
 	}
 
@@ -168,10 +163,10 @@ func sessionCheck() gin.HandlerFunc {
 		// セッションがない場合、ログインフォームをだす
 		if LoginInfo.ID == nil {
 			log.Println("ログインしていません")
-			c.Redirect(http.StatusMovedPermanently, "/") // /signup
-			c.Abort()                                    // これがないと続けて処理されてしまう
+			c.Redirect(http.StatusMovedPermanently, "/")
+			c.Abort()
 		} else {
-			c.Set("ID", LoginInfo.ID) // ユーザidをセット
+			c.Set("ID", LoginInfo.ID)
 			c.Next()
 		}
 		log.Println("ログインチェック終わり")
@@ -181,16 +176,15 @@ func sessionCheck() gin.HandlerFunc {
 var url string = "https://virtual-youtuber.userlocal.jp/lives"
 
 func startCruise(url string) func() (string, bool) {
-	dataLink := GetLivingVideo(url) //動画を取ってくる
-	lenDataLink := len(dataLink)    // 動画の本数
-	//fmt.Println(lenDataLink)
+	dataLink := GetLivingVideo(url)
+	lenDataLink := len(dataLink) // lenDataLink = 動画の本数
 	n := -1
 	return func() (string, bool) {
 		n++
 		if n == lenDataLink {
 			return dataLink[0], false //errors.New("終了")
 		}
-		return dataLink[n], true //, "mada"
+		return dataLink[n], true
 	}
 }
 

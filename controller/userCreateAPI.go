@@ -14,9 +14,9 @@ import (
 func (pc Controller) CreateVideoInfo(c *gin.Context) {
 	videoURL := c.PostForm("videoURL")
 
-	videoID, videoName, thumbnailURL, viewCount, commentCount, likeCount, dislikeCount, uploadDate := youtubeapi.PrintVideoInfo(videoURL) //videoDescription
-	db.InsertVideoInfo(videoID, videoName, thumbnailURL, viewCount, commentCount, likeCount, dislikeCount, uploadDate)                    //, videoDescription
-	c.Redirect(http.StatusFound, "/")                                                                                                     // http.StatusFound = 302
+	videoID, videoName, thumbnailURL, viewCount, commentCount, likeCount, dislikeCount, uploadDate := youtubeapi.PrintVideoInfo(videoURL)
+	db.InsertVideoInfo(videoID, videoName, thumbnailURL, viewCount, commentCount, likeCount, dislikeCount, uploadDate)
+	c.Redirect(http.StatusFound, "/")
 }
 
 // CreateChannelInfo "/regchannel" PrintChannelInfoをdbに登録
@@ -28,7 +28,7 @@ func (pc Controller) CreateChannelInfo(c *gin.Context) {
 
 	} else {
 		db.InsertChannelInfo(channelID, channelName, viewCount, subscriberCount, videoCount)
-		c.Redirect(http.StatusFound, "/") // http.StatusFound = 302
+		c.Redirect(http.StatusFound, "/")
 	}
 }
 
@@ -36,9 +36,9 @@ func (pc Controller) CreateChannelInfo(c *gin.Context) {
 func (pc Controller) ShiromiyaCreateVideoInfo(c *gin.Context) {
 	videoURL := c.PostForm("shiromiyaVideoURL")
 
-	videoID, videoName, thumbnailURL, viewCount, commentCount, likeCount, dislikeCount, uploadDate := youtubeapi.PrintVideoInfo(videoURL) //videoDescription
-	db.InsertVideoInfo(videoID, videoName, thumbnailURL, viewCount, commentCount, likeCount, dislikeCount, uploadDate)                    //, videoDescription
-	c.Redirect(http.StatusFound, "/")                                                                                                     // http.StatusFound = 302
+	videoID, videoName, thumbnailURL, viewCount, commentCount, likeCount, dislikeCount, uploadDate := youtubeapi.PrintVideoInfo(videoURL)
+	db.InsertVideoInfo(videoID, videoName, thumbnailURL, viewCount, commentCount, likeCount, dislikeCount, uploadDate)
+	c.Redirect(http.StatusFound, "/")
 }
 
 // ShiromiyaCreateChannelInfo "shiromiyaregchannel" PostForm => "shiromiyaChannelURL"白宮のチャンネル情報をDB(ShiromiyaChannelInfo)に登録
@@ -50,7 +50,7 @@ func (pc Controller) ShiromiyaCreateChannelInfo(c *gin.Context) {
 		log.Println(err)
 	} else {
 		db.InsertChannelInfo(channelID, channelName, viewCount, subscriberCount, videoCount)
-		c.Redirect(http.StatusFound, "/") // http.StatusFound = 302
+		c.Redirect(http.StatusFound, "/")
 	}
 }
 
@@ -58,9 +58,9 @@ func (pc Controller) ShiromiyaCreateChannelInfo(c *gin.Context) {
 func (pc Controller) HashibaCreateVideoInfo(c *gin.Context) {
 	videoURL := c.PostForm("hashibaVideoURL")
 
-	videoID, videoName, thumbnailURL, viewCount, commentCount, likeCount, dislikeCount, uploadDate := youtubeapi.PrintVideoInfo(videoURL) //videoDescription
-	db.InsertVideoInfo(videoID, videoName, thumbnailURL, viewCount, commentCount, likeCount, dislikeCount, uploadDate)                    //, videoDescription
-	c.Redirect(http.StatusFound, "/")                                                                                                     // http.StatusFound = 302
+	videoID, videoName, thumbnailURL, viewCount, commentCount, likeCount, dislikeCount, uploadDate := youtubeapi.PrintVideoInfo(videoURL)
+	db.InsertVideoInfo(videoID, videoName, thumbnailURL, viewCount, commentCount, likeCount, dislikeCount, uploadDate)
+	c.Redirect(http.StatusFound, "/")
 }
 
 //HashibaCreateChannelInfo "hashibaregchannel" PostForm => "HashibaChannelURL"羽柴のチャンネル情報をDB(HashibaChannelInfo)に登録
@@ -72,6 +72,6 @@ func (pc Controller) HashibaCreateChannelInfo(c *gin.Context) {
 		c.String(http.StatusOK, "%v\n", err)
 	} else {
 		db.InsertChannelInfo(channelID, channelName, viewCount, subscriberCount, videoCount)
-		c.Redirect(http.StatusFound, "/") // http.StatusFound = 302
+		c.Redirect(http.StatusFound, "/")
 	}
 }

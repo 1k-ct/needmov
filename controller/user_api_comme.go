@@ -12,7 +12,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-// 共通部分ですどうするか
+// 共通部分です
 // var d []entity.Data
 // db := db.ConnectGorm()
 func cone(obj ...interface{}) *gorm.DB {
@@ -20,14 +20,12 @@ func cone(obj ...interface{}) *gorm.DB {
 	return db
 }
 func encodingMsg(b string) string {
-	// Base64 エンコード
 	data := []byte(b)
 
 	enc := base64.StdEncoding.EncodeToString(data)
 	return enc
 }
 func decodingMsg(enc string) (string, error) {
-	// Base64 decoding
 	dec, err := base64.StdEncoding.DecodeString(enc)
 	if err != nil {
 		return "", err
@@ -45,7 +43,6 @@ func (pc Controller) APIInsertCommentData(c *gin.Context) {
 	}
 	d.Name = encodingMsg(d.Name)
 	d.Message = encodingMsg(d.Message)
-	// d.Name d.Message encoding start
 	if err := db.CreateDBSelfFn(&d); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"msg": err})
 		return
@@ -140,14 +137,12 @@ func (pc Controller) CommeNameSC(c *gin.Context) {
 	c.JSON(http.StatusOK, d)
 }
 
-// CommeNameSC チャンネルの動画内のsuperChatしたname選択
+// CommeNameVideoSC チャンネルの動画内のsuperChatしたname選択
 // "api/comme/namesc?name=xxx&"
 func (pc Controller) CommeNameVideoSC(c *gin.Context) {
 	var d []entity.Data
 	db := db.ConnectGorm()
 	s := "superChat"
-	// name := c.Query("name")
-	// name = encodingMsg(name)
 	name := encodingMsg(c.Query("name"))
 	vID := c.Query("id")
 	mChID := c.Query("chid")
