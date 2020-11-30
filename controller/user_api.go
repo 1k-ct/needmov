@@ -1,7 +1,6 @@
 package user
 
 import (
-	"log"
 	apierrors "needmov/APIerrors"
 	"needmov/db"
 	"needmov/entity"
@@ -32,13 +31,13 @@ func (pc Controller) APIInsterChURL(c *gin.Context) {
 	if len(url) == 24 && url[0:2] == "UC" {
 		_, err := db.InsterRegChannel(url) // urlの登録。err は、urlが重複するかチェック
 		if err != nil {
-			c.JSON(http.StatusOK, *apierrors.ErrDuplicateURL)
+			c.JSON(http.StatusBadRequest, *apierrors.ErrDuplicateURL)
 		} else {
 			ch := entity.RegChannel{ChannelID: url}
 			c.JSON(http.StatusOK, ch)
 		}
 	} else {
-		c.JSON(http.StatusOK, *apierrors.ErrInvalidURL)
+		c.JSON(http.StatusBadRequest, *apierrors.ErrInvalidURL)
 	}
 }
 
@@ -47,7 +46,7 @@ func (pc Controller) APIInsterChURL(c *gin.Context) {
 func (pc Controller) APIAllGetChannelInfo(c *gin.Context) {
 	channelInfos, err := db.GetDBChannelInfo()
 	if err != nil {
-		log.Println(err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, apierrors.ErrDB)
 	}
 	c.JSON(http.StatusOK, channelInfos)
 }
@@ -61,7 +60,8 @@ func (pc Controller) APISelectWho(c *gin.Context) {
 
 	err := db.Where("channel_id = ?", who).Find(&chInfos).Error
 	if err != nil {
-		log.Printf(":%v", err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, apierrors.ErrDB)
+		return
 	}
 	c.JSON(http.StatusOK, chInfos)
 }
