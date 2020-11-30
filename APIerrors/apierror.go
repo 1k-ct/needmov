@@ -37,3 +37,15 @@ var ErrJson = &ApplicationError{
 	Msg1:  "I couldn't read the json.",
 	Msg2:  "jsonの読み取りか出来ませんでした。",
 }
+var ErrDecoding = &ApplicationError{
+	Code:  5,
+	Level: "Error",
+	Msg1:  "That character could not be decoded(Base64)",
+	Msg2:  "その文字は、変換(Base64)出来ませんでした。",
+}
+var ErrAPIKey = &ApplicationError{
+	Code:  6,
+	Level: "Error",
+	Msg1:  "Its API key is not registered.",
+	Msg2:  "そのAPIキーは、登録されていません。",
+}
