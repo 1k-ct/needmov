@@ -18,46 +18,37 @@ func testform(method string, url string, body io.Reader) (w *httptest.ResponseRe
 	router.ServeHTTP(w, c.Request)
 	return
 }
-func TestChInfo(t *testing.T) {
-	// router := router(false)
-	// w := httptest.NewRecorder()
-	// c, _ := gin.CreateTestContext(w)
-	// // body := bytes.NewBufferString("{\"name\":\"foo\"}")
-	// c.Request, _ = http.NewRequest("GET", "/api/ch-info", nil)
-	// // req, _ := http.NewRequest("POST", "/ps", body)
-	// router.ServeHTTP(w, c.Request)
+func Test_ChInfo(t *testing.T) {
 	w, _ := testform("GET", "/api/ch-info", nil)
-	// log.Println("-------", w.Body.String())
 	assert.Equal(t, w.Code, 200)
 }
-func TestChSel(t *testing.T) {
+func Test_ChSel(t *testing.T) {
 	// w, _ := testform("POST", "/reg?url=xxx", nil)
 	w, c := testform("GET", "/api/ch-sel?who-ch=xxx", nil)
 
 	assert.Equal(t, c.Query("who-ch"), "xxx")
 	assert.Equal(t, w.Code, 200)
 }
-func TestDateSel(t *testing.T) {
+func Test_DateSel(t *testing.T) {
 	w, c := testform("GET", "/api/date-sel?who-ch=xxx", nil)
 
 	assert.Equal(t, c.Query("who-ch"), "xxx")
 	assert.Equal(t, w.Code, 200)
 }
-func TestLatestCh(t *testing.T) {
+func Test_LatestCh(t *testing.T) {
 	w, c := testform("GET", "/api/latest-ch?who-ch=xxx", nil)
 
 	assert.Equal(t, w.Code, 200)
 	assert.Equal(t, c.Query("who-ch"), "xxx")
 }
 
-func TestDateBetween(t *testing.T) {
+func Test_DateBetween(t *testing.T) {
 	w, c := testform("GET", "/api/date-between?who-ch=xxx", nil)
 
 	assert.Equal(t, w.Code, 200)
 	assert.Equal(t, c.Query("who-ch"), "xxx")
 }
 
-// postわからんくなったPOSTはテストあとで
 // func TestReg(t *testing.T) {
 // 	url := "/api/reg?url=UCxxxxxxxxxxxxxxxxxxxxxx"
 // 	router := router(false)
