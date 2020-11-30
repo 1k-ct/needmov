@@ -1,10 +1,14 @@
 package server
 
 import (
+	"log"
+	apierrors "needmov/APIerrors"
 	user "needmov/controller"
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	"google.golang.org/appengine"
 )
 
@@ -14,7 +18,18 @@ func Init() {
 	r.Run()
 	appengine.Main()
 }
-
+func approvalMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		err := godotenv.Load()
+		if err != nil {
+			log.Fatal(err)
+		}
+		key := c.Query("key")
+		if key != os.Getenv("myAPIKEY") {
+			c.AbortWithStatusJSON(http.StatusBadRequest, apierrors.ErrAPIKey)
+		}
+	}
+}
 func router(gae bool) *gin.Engine {
 	r := gin.Default()
 
@@ -49,15 +64,15 @@ func router(gae bool) *gin.Engine {
 		api.GET("/date-between", ctrl.APISelectDateBetween)
 
 		// urlを登録する１つだけ "api/reg?url="
-		// "api/reg?url=UCxxxxxxxxxxxxxxxxxxxxxx"
-		api.POST("/reg", ctrl.APIInsterChURL)
+		// "api/reg?key=xxx&url=UCxxxxxxxxxxxxxxxxxxxxxx"
+		api.POST("/reg", approvalMiddleware(), ctrl.APIInsterChURL)
 
-		// ch情報をjsonで受け取りdbに保存する "api/pri" "POST" bindJSON entity.ChannelInfos = ch
-		api.POST("/pri", ctrl.APIInsterChInfo)
+		// ch情報をjsonで受け取りdbに保存する "api/pri?key=xxx" "POST" bindJSON entity.ChannelInfos = ch
+		api.POST("/pri", approvalMiddleware(), ctrl.APIInsterChInfo)
 		comme := api.Group("comme")
 		{
-			// コメントデータをdbに保存する。"api/data" "POST" bindJSON entity.Data
-			comme.POST("/data", ctrl.APIInsertCommentData)
+			// コメントデータをdbに保存する。"api/data?key=xxx" "POST" bindJSON entity.Data
+			comme.POST("/data", approvalMiddleware(), ctrl.APIInsertCommentData)
 
 			// name ? その人(name)が書いたコメント、チャンネル内全て
 			// api/comme/name_sel?name=xxx
@@ -68,7 +83,7 @@ func router(gae bool) *gin.Engine {
 			comme.GET("/namecomme_sel", ctrl.CommeNameCom)
 
 			// type ? (superChat) そのチャンネルのsuperChat全て
-			// api/comme/all_sc
+			// api/comme/all_sc?chid=xxxxx
 			comme.GET("/all_sc", ctrl.CommeAllSC) // もし、他のチャンネルが登録されれば消す
 
 			// type ? (superChat) and video_id(url) その動画内でのsuperChat全て
@@ -89,7 +104,8 @@ func router(gae bool) *gin.Engine {
 			// message ? (like) video_id ? その動画内でのコメント検索、全て
 			// api/comme/chvimsg_simi?chid=xxx&id=xxx&msg=xxx
 			comme.GET("/chvimsg_simi", ctrl.CommeChViMsg)
-
+			// api/comme/delchvi?key=xxx&id=xxx
+			comme.DELETE("/delchvi", approvalMiddleware(), ctrl.CommeVideoSC)
 		}
 	}
 	return r
