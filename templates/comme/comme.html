@@ -6,8 +6,8 @@
     <title>Document</title>
 </head>
 <body>
-    <h4>羽柴なつみさんのホーム</h4>
-    <a href="/hashiba/reg">データベースの情報を見る</a>
-    {{ .views }}
+    {{range .commedata}}
+    <p>{{.video_url}}<b>{{.elapsedTime}}</b><b>{{.message}}</b></p>
+    {{end}}
 </body>
 </html>
