@@ -1,7 +1,10 @@
 package server
 
 import (
+	"fmt"
 	"io"
+	"needmov/db"
+	"needmov/entity"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -9,6 +12,44 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
+
+func Test_defMiddleware(t *testing.T) {
+	fn := func(key string) (entity.APIKEY, error) {
+		var k entity.APIKEY
+		db := db.ConnectGorm()
+		defer db.Close()
+		if err := db.Where("self_key = ?", key).Find(&k).Error; err != nil {
+			return k, err
+		}
+		return k, nil
+	}
+	tests := []struct {
+		args    string
+		want    string
+		wantErr bool
+	}{
+		{
+			args:    "test-key-no1",
+			want:    "test-key-no1",
+			wantErr: false,
+		},
+		{
+			args:    "test-false",
+			want:    "test-key-no1",
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		ke, err := fn(tt.args)
+		fmt.Println(err)
+		if (err != nil) != tt.wantErr {
+			t.Errorf("error = %v, wantErr %v", err, tt.wantErr)
+		}
+		if (ke.SelfKey == tt.want) == tt.wantErr {
+			t.Errorf("fn() = %v, want %v", ke.SelfKey, tt.want)
+		}
+	}
+}
 
 func testform(method string, url string, body io.Reader) (w *httptest.ResponseRecorder, c *gin.Context) {
 	router := router(false)
