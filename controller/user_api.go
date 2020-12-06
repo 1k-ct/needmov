@@ -9,6 +9,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// APIKEYCreate APIKEYの登録
+// api/keycre?key=xxx&newkey=xxx&userid=xxx
+func (pc Controller) APIKEYCreate(c *gin.Context) {
+	k := c.Query("newkey")
+	i := c.Query("userid")
+	keydb, err := db.InsertCreateKEY(k, i)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, keydb)
+	}
+	c.JSON(http.StatusOK, keydb)
+}
+
 // APIInsterChInfo ch情報をjsonで受け取りdbに保存する
 // "api/pri" "POST" bindJSON entity.ChannelInfos = ch
 func (pc Controller) APIInsterChInfo(c *gin.Context) {

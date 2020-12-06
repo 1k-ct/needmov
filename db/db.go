@@ -2,7 +2,6 @@ package db
 
 import (
 	"errors"
-	"needmov/crypto"
 	"needmov/entity"
 
 	_ "github.com/go-sql-driver/mysql" // gormでdbと接続は、mysqlでする。
@@ -19,11 +18,10 @@ func NewMakeDB() {
 	db := ConnectGorm()
 	defer db.Close()
 
-	db.AutoMigrate(&entity.UsersMig{})
-	db.AutoMigrate(&entity.Users{})
-	db.AutoMigrate(&entity.ChannelInfos{}, &entity.VideoInfos{})
+	db.AutoMigrate(&entity.ChannelInfos{})
 	db.AutoMigrate(&entity.RegChannel{})
 	db.AutoMigrate(&entity.Data{})
+	db.AutoMigrate(&entity.APIKEY{})
 }
 
 // DropDBGorm []interface{}スライスで削除できる
@@ -32,17 +30,6 @@ func DropDBGorm(obj ...interface{}) {
 	defer db.Close()
 	db.DropTableIfExists(obj...)
 
-}
-
-// CreateUser ユーザー登録
-func CreateUser(username string, password string) []error {
-	passwordEncrypt, _ := crypto.PasswordEncrypt(password)
-	db := ConnectGorm()
-	defer db.Close()
-	if err := db.Create(&entity.UsersMig{Username: username, Password: passwordEncrypt}).GetErrors(); err != nil {
-		return err
-	}
-	return nil
 }
 
 // ConnectGorm localhostの接続
@@ -81,7 +68,7 @@ func ConnectGorm() *gorm.DB {
 }
 */
 
-//ConnectGorm connect dbの接続 本場
+// ConnectGorm connect dbの接続 本場
 // func ConnectGorm() *gorm.DB {
 // 	err := godotenv.Load()
 // 	if err != nil {
@@ -92,7 +79,7 @@ func ConnectGorm() *gorm.DB {
 // 	PASS := os.Getenv("DB_PASS")
 // 	CONNECTIONNAME := os.Getenv("DB_CONNECTIONNAME")
 // 	DBNAME := os.Getenv("DB_NAME")
-// 	localConnection := USER + ":" + PASS + "@/" + DBNAME + "?parseTime=true"
+// 	localConnection := "root:password@tcp(mysql:3306)/sample"
 // 	cloudSQLConnection := USER + ":" + PASS + "@unix(/cloudsql/" + CONNECTIONNAME + ")/" + DBNAME + "?parseTime=true"
 // 	var db *gorm.DB
 
@@ -106,40 +93,6 @@ func ConnectGorm() *gorm.DB {
 // 	}
 // 	return db
 // }
-
-// AddNewInDB DBに新しく追加する
-func AddNewInDB(id int, name string, password string, email string) {
-	db := ConnectGorm()
-	db.Create(&entity.Users{ID: id, Name: name, PassWord: password, Email: email})
-	defer db.Close()
-}
-
-// GetDBContents DBの全ての投稿を取得する
-func GetDBContents() []entity.UsersMig {
-	db := ConnectGorm()
-	var users []entity.UsersMig
-	db.Find(&users)
-	db.Close()
-	return users
-}
-
-// DeleteDB 選択したidをDBから削除
-func DeleteDB(id int) {
-	db := ConnectGorm()
-	var user entity.UsersMig
-	db.First(&user, id)
-	db.Delete(&user)
-	db.Close()
-}
-
-// GetUser ユーザーを一件取得
-func GetUser(username string) entity.UsersMig {
-	db := ConnectGorm()
-	var user entity.UsersMig
-	db.First(&user, "username = ?", username)
-	db.Close()
-	return user
-}
 
 // InsterRegChannel チャンネルURLをDBに登録
 func InsterRegChannel(url string) ([]entity.RegChannel, error) {
@@ -176,4 +129,17 @@ func AllGetRegCh() []entity.RegChannel {
 	var regch []entity.RegChannel
 	db.Find(&regch)
 	return regch
+}
+
+// InsertCreateKEY apikeyの作成（自分で）して登録
+func InsertCreateKEY(myKEY string, uID string) (entity.APIKEY, error) {
+	db := ConnectGorm()
+	defer db.Close()
+	var key entity.APIKEY
+	key.SelfKey, key.UserID = myKEY, uID
+	err := db.Create(&key).Error
+	if err != nil {
+		return key, err
+	}
+	return key, nil
 }
