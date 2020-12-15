@@ -2,31 +2,32 @@ package db
 
 import (
 	"needmov/entity"
-	"time"
 )
 
 // InsertVideoInfo videoInfo db に、情報を書き込み
 func InsertVideoInfo(
-	videoID string,
-	videoName string,
-	thumbnailURL string,
-	viewCount uint64,
-	commentCount uint64,
-	likeCount uint64,
-	dislikeCount uint64,
-	uploadDate time.Time,
+	// videoID string,
+	// videoName string,
+	// thumbnailURL string,
+	// viewCount uint64,
+	// commentCount uint64,
+	// likeCount uint64,
+	// dislikeCount uint64,
+	// uploadDate time.Time,
+	vi *entity.VideoInfos,
 ) {
 	db := ConnectGorm()
-	db.Create(&entity.VideoInfos{
-		VideoID:      videoID,
-		VideoName:    videoName,
-		ThumbnailURL: thumbnailURL,
-		ViewCount:    viewCount,
-		CommentCount: commentCount,
-		LikeCount:    likeCount,
-		DislikeCount: dislikeCount,
-		UploadDate:   uploadDate,
-	})
+	// db.Create(&entity.VideoInfos{
+	// 	VideoID:      videoID,
+	// 	VideoName:    videoName,
+	// 	ThumbnailURL: thumbnailURL,
+	// 	ViewCount:    viewCount,
+	// 	CommentCount: commentCount,
+	// 	LikeCount:    likeCount,
+	// 	DislikeCount: dislikeCount,
+	// 	UploadDate:   uploadDate,
+	// })
+	db.Create(&vi)
 	defer db.Close()
 }
 

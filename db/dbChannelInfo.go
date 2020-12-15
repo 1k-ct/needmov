@@ -6,20 +6,22 @@ import (
 
 // InsertChannelInfo channelInfoに追加
 func InsertChannelInfo(
-	channelID string,
-	channelName string,
-	viewCount uint64,
-	subscriberCount uint64,
-	videoCount uint64,
+	// channelID string,
+	// channelName string,
+	// viewCount uint64,
+	// subscriberCount uint64,
+	// videoCount uint64,
+	ch *entity.ChannelInfos,
 ) {
 	db := ConnectGorm()
-	db.Create(&entity.ChannelInfos{
-		ChannelID:       channelID,
-		ChannelName:     channelName,
-		ViewCount:       viewCount,
-		SubscriberCount: subscriberCount,
-		VideoCount:      videoCount,
-	})
+	// db.Create(&entity.ChannelInfos{
+	// 	ChannelID:       channelID,
+	// 	ChannelName:     channelName,
+	// 	ViewCount:       viewCount,
+	// 	SubscriberCount: subscriberCount,
+	// 	VideoCount:      videoCount,
+	// })
+	db.Create(&ch)
 	defer db.Close()
 }
 

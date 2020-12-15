@@ -19,7 +19,7 @@ func (pc Controller) APIInsterChInfo(c *gin.Context) {
 		return
 	}
 	// ch.CreatedAt(time.Time) は、登録しない
-	db.InsertChannelInfo(ch.ChannelID, ch.ChannelName, ch.ViewCount, ch.SubscriberCount, ch.VideoCount)
+	db.InsertChannelInfo(&ch)
 	// msg => ch で返ってくる"create_at": "0001-01-01T00:00:00Z"　エラーではない
 	c.JSON(http.StatusOK, gin.H{"msg": ch})
 }
