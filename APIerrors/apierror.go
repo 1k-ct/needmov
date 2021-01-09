@@ -31,6 +31,12 @@ var ErrDB = &ApplicationError{
 	Msg1:  "I couldn't manipulate the database.",
 	Msg2:  "データベースの操作が出来ませんでした。",
 }
+var ErrDBUserID = &ApplicationError{
+	Code:  31,
+	Level: "Error",
+	Msg1:  "The USERID you entered does not exist.",
+	Msg2:  "入力されたユーザーIDは存在しません。",
+}
 var ErrJson = &ApplicationError{
 	Code:  4,
 	Level: "Error",
