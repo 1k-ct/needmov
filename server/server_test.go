@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"io"
 	"needmov/db"
 	"needmov/entity"
@@ -40,14 +39,15 @@ func Test_defMiddleware(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		ke, err := fn(tt.args)
-		fmt.Println(err)
-		if (err != nil) != tt.wantErr {
-			t.Errorf("error = %v, wantErr %v", err, tt.wantErr)
-		}
-		if (ke.SelfKey == tt.want) == tt.wantErr {
-			t.Errorf("fn() = %v, want %v", ke.SelfKey, tt.want)
-		}
+		t.Run(tt.args, func(t *testing.T) {
+			got, err := fn(tt.args)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("error = %v, wantErr %v", err, tt.wantErr)
+			}
+			if (got.SelfKey == tt.want) == tt.wantErr {
+				t.Errorf("fn() = %v, want %v", got.SelfKey, tt.want)
+			}
+		})
 	}
 }
 

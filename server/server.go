@@ -5,9 +5,10 @@ import (
 	apierrors "needmov/APIerrors"
 	user "needmov/controller"
 	"needmov/db"
-	"needmov/entity"
 	"net/http"
 	"os"
+
+	"golang.org/x/crypto/bcrypt"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -34,12 +35,15 @@ func approvalMiddleware() gin.HandlerFunc {
 }
 func defMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var k entity.APIKEY
-		db := db.ConnectGorm()
-		defer db.Close()
 		key := c.Query("key")
-		if err := db.Where("self_key = ?", key).Find(&k).Error; err != nil {
-			c.AbortWithStatusJSON(http.StatusBadRequest, apierrors.ErrAPIKey)
+		userID := c.Query("userid")
+		k, err := db.GetDBUserKey(userID)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusBadRequest, apierrors.ErrDBUserID)
+			return
+		}
+		if err := bcrypt.CompareHashAndPassword([]byte(k.SelfKey), []byte(key)); err != nil {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, apierrors.ErrAPIKey)
 		}
 	}
 }
@@ -78,14 +82,14 @@ func router(gae bool) *gin.Engine {
 		api.GET("/date-between", ctrl.APISelectDateBetween)
 
 		// urlを登録する１つだけ "api/reg?url="
-		// "api/reg?key=xxx&url=UCxxxxxxxxxxxxxxxxxxxxxx"
+		// "api/reg?key=xxx&userid=xxx&url=UCxxxxxxxxxxxxxxxxxxxxxx"
 		api.POST("/reg", defMiddleware(), ctrl.APIInsterChURL)
 
-		// ch情報をjsonで受け取りdbに保存する "api/pri?key=xxx" "POST" bindJSON entity.ChannelInfos = ch
+		// ch情報をjsonで受け取りdbに保存する "api/pri?key=xxx&userid=xxx" "POST" bindJSON entity.ChannelInfos = ch
 		api.POST("/pri", defMiddleware(), ctrl.APIInsterChInfo)
 		comme := api.Group("comme")
 		{
-			// コメントデータをdbに保存する。"api/data?key=xxx" "POST" bindJSON entity.Data
+			// コメントデータをdbに保存する。"api/data?key=xxx&userid=xxx" "POST" bindJSON entity.Data
 			comme.POST("/data", defMiddleware(), ctrl.APIInsertCommentData)
 
 			// name ? その人(name)が書いたコメント、チャンネル内全て
