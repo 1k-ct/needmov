@@ -14,17 +14,6 @@ type User entity.Users
 type ChannelInfo entity.ChannelInfos
 type VideoInfos entity.VideoInfos
 
-/*
-//GetAllUserInfo entity.Users(db)内容を全部取る
-func (s Service) GetAllUserInfo() ([]User, error) {
-	db := db.ConnectGorm()
-	var user []User
-	if err := db.Find(&user).Error; err != nil {
-		return nil, err
-	}
-	return user, nil
-}
-*/
 //GetSomeoneChannelInfo entity.ChannelInfos(db)から指定したURLの情報を全部取る
 func (s Service) GetSomeoneChannelInfo(c *gin.Context, url string) ([]ChannelInfo, error) {
 	db := db.ConnectGorm()

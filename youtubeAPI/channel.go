@@ -3,6 +3,7 @@ package youtubeapi
 import (
 	"errors"
 	"log"
+	"needmov/entity"
 	"net/http"
 	"os"
 	"time"
@@ -12,43 +13,26 @@ import (
 	"google.golang.org/api/youtube/v3"
 )
 
-// PrintChannelInfo return id string, name string, viewCount uint64, subscriberCount uint64, videoCount uint64,
-func PrintChannelInfo(channelID string) (string, string, uint64, uint64, uint64, error) {
+// PrintChannelInfo return (*entity.ChannelInfos, error)
+func PrintChannelInfo(channelID string) (*entity.ChannelInfos, error) {
 	service := newYoutubeService(newClient())
-	//lis := []string{"snippet", "contentDetails", "statistics"}
-	call := service.Channels.List([]string{"snippet", "contentDetails", "statistics"}).
-		Id(channelID).
-		MaxResults(1)
+	call := service.Channels.List([]string{"snippet", "contentDetails", "statistics"}).Id(channelID).MaxResults(1)
 	response, err := call.Do()
 	if err != nil {
-		log.Printf("%v\n", err)
+		return nil, errors.New("response error")
 	}
 	if response.Items == nil {
-		return "", "", 1, 1, 1, errors.New("IDが無効です")
+		return nil, errors.New("IDが無効です")
 	}
 	item := response.Items[0]
-
-	id := item.Id
-	name := item.Snippet.Title
-	//description := item.Snippet.Description
-	//thumbnailURL := item.Snippet.Thumbnails.High.Url
-	//playlistID := item.ContentDetails.RelatedPlaylists.Uploads
-	viewCount := item.Statistics.ViewCount
-	subscriberCount := item.Statistics.SubscriberCount
-	videoCount := item.Statistics.VideoCount
-	/*
-		fmt.Printf("channel id: %v\n\nチャンネル名: \n%v\n\n説明: %v\n\nサムネイルURL: %v\n\nplaylist id: %v\n\n総再生回数: %v\n\nチャンネル登録者数: %v\n\n動画数: %v\n",
-			id,
-			name,
-			description,
-			thumbnailURL,
-			playlistID,
-			viewCount,
-			subscriberCount,
-			videoCount,
-		)
-	*/
-	return id, name, viewCount, subscriberCount, videoCount, nil
+	c := &entity.ChannelInfos{
+		ChannelID:       item.Id,
+		ChannelName:     item.Snippet.Title,
+		ViewCount:       item.Statistics.ViewCount,
+		SubscriberCount: item.Statistics.SubscriberCount,
+		VideoCount:      item.Statistics.VideoCount,
+	}
+	return c, nil
 }
 func newClient() *http.Client {
 	err := godotenv.Load()
@@ -68,36 +52,31 @@ func newYoutubeService(client *http.Client) *youtube.Service {
 	if err != nil {
 		log.Fatalf("Unable to create YouTube service: %v", err)
 	}
-
 	return service
 }
 
-// PrintVideoInfo return(id string, name string, description string, thumbnailURL string, viewCount uint64, commentCount uint64, likeCount uint64, dislikeCount uint64, uploadData time.Time)
-func PrintVideoInfo(videoID string) (string, string, string, uint64, uint64, uint64, uint64, time.Time) {
+// PrintVideoInfo return(*entity.VideoInfos, error)
+func PrintVideoInfo(videoID string) (*entity.VideoInfos, error) {
 	service := newYoutubeService(newClient())
-	call := service.Videos.List([]string{"id,snippet,Statistics"}).
-		Id(videoID).
-		MaxResults(1)
+	call := service.Videos.List([]string{"id,snippet,Statistics"}).Id(videoID).MaxResults(1)
 	response, err := call.Do()
 	if err != nil {
-		log.Fatalf("%v", err)
+		return nil, errors.New("respone error")
 	}
-
 	item := response.Items[0]
-	id := item.Id
-	name := item.Snippet.Title
-	//description := item.Snippet.Description
-	thumbnailURL := item.Snippet.Thumbnails.High.Url
-	viewCount := item.Statistics.ViewCount
-	commentCount := item.Statistics.CommentCount
-	likeCount := item.Statistics.LikeCount
-	dislikeCount := item.Statistics.DislikeCount
-	//channelID := item.Snippet.ChannelId
-	//categoryID := item.Snippet.CategoryId
-	//categoryName := getVideoCategory(categoryID)
 	uploadDate, err := time.Parse(time.RFC3339, item.Snippet.PublishedAt)
 	if err != nil {
-		log.Fatalf("%v", err)
+		return nil, errors.New("uploadDate error")
 	}
-	return id, name, thumbnailURL, viewCount, commentCount, likeCount, dislikeCount, uploadDate //description
+	v := &entity.VideoInfos{
+		VideoID:      item.Id,
+		VideoName:    item.Snippet.Title,
+		ThumbnailURL: item.Snippet.Thumbnails.High.Url,
+		ViewCount:    item.Statistics.ViewCount,
+		CommentCount: item.Statistics.CommentCount,
+		LikeCount:    item.Statistics.LikeCount,
+		DislikeCount: item.Statistics.DislikeCount,
+		UploadDate:   uploadDate,
+	}
+	return v, nil
 }

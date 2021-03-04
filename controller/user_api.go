@@ -19,7 +19,7 @@ func (pc Controller) APIInsterChInfo(c *gin.Context) {
 		return
 	}
 	// ch.CreatedAt(time.Time) は、登録しない
-	db.InsertChannelInfo(ch.ChannelID, ch.ChannelName, ch.ViewCount, ch.SubscriberCount, ch.VideoCount)
+	db.InsertChannelInfo(&ch)
 	// msg => ch で返ってくる"create_at": "0001-01-01T00:00:00Z"　エラーではない
 	c.JSON(http.StatusOK, gin.H{"msg": ch})
 }
@@ -28,19 +28,16 @@ func (pc Controller) APIInsterChInfo(c *gin.Context) {
 // "api/reg?url="
 func (pc Controller) APIInsterChURL(c *gin.Context) {
 	url := c.Query("url")
-	// urlが正しいかチェック
-	if len(url) == 24 && url[0:2] == "UC" { // urlが24文字でUCで始まるのはOK
+	// urlが正しいかチェック 。urlが24文字でUCで始まるのはOK
+	if len(url) == 24 && url[0:2] == "UC" {
 		_, err := db.InsterRegChannel(url) // urlの登録。err は、urlが重複するかチェック
 		if err != nil {
-			//Error msg その、URLはすでにあります。
 			c.JSON(http.StatusOK, *apierrors.ErrDuplicateURL)
 		} else {
-			//Success msg 追加しました！
 			ch := entity.RegChannel{ChannelID: url}
 			c.JSON(http.StatusOK, ch)
 		}
 	} else {
-		//Error msg そのURLは正しくありません。もう一度確認お願いします！
 		c.JSON(http.StatusOK, *apierrors.ErrInvalidURL)
 	}
 }
@@ -100,5 +97,3 @@ func (pc Controller) APISelectDateBetween(c *gin.Context) {
 	db.Where("channel_id = ? AND created_at BETWEEN ? AND ?", id, past1, past2).Find(&chInfos)
 	c.JSON(http.StatusOK, chInfos)
 }
-
-//func (pc Controller) API (c *gin.Context) {}

@@ -2,15 +2,11 @@ package db
 
 import (
 	"errors"
-	"log"
 	"needmov/crypto"
 	"needmov/entity"
-	"os"
 
-	_ "github.com/go-sql-driver/mysql" // gorm mysql import
+	_ "github.com/go-sql-driver/mysql" // gormでdbと接続は、mysqlでする。
 	"github.com/jinzhu/gorm"
-	"github.com/joho/godotenv"
-	"google.golang.org/appengine"
 )
 
 //var (
@@ -26,12 +22,11 @@ func NewMakeDB() {
 	db.AutoMigrate(&entity.UsersMig{})
 	db.AutoMigrate(&entity.Users{})
 	db.AutoMigrate(&entity.ChannelInfos{}, &entity.VideoInfos{})
-	//db.AutoMigrate(&entity.ShiromiyaChannelInfos{}, &entity.ShiromiyaVideoInfos{})
-	//db.AutoMigrate(&entity.HashibaChannelInfos{}, &entity.HashibaVideoInfos{})
 	db.AutoMigrate(&entity.RegChannel{})
+	db.AutoMigrate(&entity.Data{})
 }
 
-//
+// DropDBGorm []interface{}スライスで削除できる
 func DropDBGorm(obj ...interface{}) {
 	db := ConnectGorm()
 	defer db.Close()
@@ -42,10 +37,8 @@ func DropDBGorm(obj ...interface{}) {
 // CreateUser ユーザー登録
 func CreateUser(username string, password string) []error {
 	passwordEncrypt, _ := crypto.PasswordEncrypt(password)
-	// Encrypt 暗号化
 	db := ConnectGorm()
 	defer db.Close()
-	// Insert処理
 	if err := db.Create(&entity.UsersMig{Username: username, Password: passwordEncrypt}).GetErrors(); err != nil {
 		return err
 	}
@@ -53,26 +46,26 @@ func CreateUser(username string, password string) []error {
 }
 
 // ConnectGorm localhostの接続
-// func ConnectGorm() *gorm.DB { // localhost
-// 	DBMS := "mysql"
-// 	USER := "user"
-// 	PASS := "password"
-// 	PROTOCOL := "tcp(localhost:3306)"
-// 	DBNAME := "sample"
+func ConnectGorm() *gorm.DB { // localhost
+	DBMS := "mysql"
+	USER := "user"
+	PASS := "password"
+	PROTOCOL := "tcp(localhost:3306)"
+	DBNAME := "sample"
 
-// 	CONNECT := USER + ":" + PASS + "@" + PROTOCOL + "/" + DBNAME + "?charset=utf8&parseTime=True&loc=Local"
-// 	db, err := gorm.Open(DBMS, CONNECT)
+	CONNECT := USER + ":" + PASS + "@" + PROTOCOL + "/" + DBNAME + "?charset=utf8&parseTime=True&loc=Local"
+	db, err := gorm.Open(DBMS, CONNECT)
 
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	return db
-// }
+	if err != nil {
+		panic(err)
+	}
+	return db
+}
 
 /*
 
 //ConnectGorm connect dbの接続 docker
-func ConnectGorm() *gorm.DB { // 下のところは自分のものに変更してください
+func ConnectGorm() *gorm.DB {
 	DBMS := "mysql"
 	USER := "root"
 	PASS := "password"
@@ -89,35 +82,35 @@ func ConnectGorm() *gorm.DB { // 下のところは自分のものに変更し�
 */
 
 //ConnectGorm connect dbの接続 本場
-func ConnectGorm() *gorm.DB {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal(err)
-	}
+// func ConnectGorm() *gorm.DB {
+// 	err := godotenv.Load()
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
 
-	USER := os.Getenv("DB_USER")
-	PASS := os.Getenv("DB_PASS")
-	CONNECTIONNAME := os.Getenv("DB_CONNECTIONNAME")
-	DBNAME := os.Getenv("DB_NAME")
-	localConnection := USER + ":" + PASS + "@/" + DBNAME + "?parseTime=true"
-	cloudSQLConnection := USER + ":" + PASS + "@unix(/cloudsql/" + CONNECTIONNAME + ")/" + DBNAME + "?parseTime=true"
-	var db *gorm.DB
+// 	USER := os.Getenv("DB_USER")
+// 	PASS := os.Getenv("DB_PASS")
+// 	CONNECTIONNAME := os.Getenv("DB_CONNECTIONNAME")
+// 	DBNAME := os.Getenv("DB_NAME")
+// 	localConnection := USER + ":" + PASS + "@/" + DBNAME + "?parseTime=true"
+// 	cloudSQLConnection := USER + ":" + PASS + "@unix(/cloudsql/" + CONNECTIONNAME + ")/" + DBNAME + "?parseTime=true"
+// 	var db *gorm.DB
 
-	if appengine.IsAppEngine() {
-		db, err = gorm.Open("mysql", cloudSQLConnection)
-	} else {
-		db, err = gorm.Open("mysql", localConnection)
-	}
-	if err != nil {
-		panic(err.Error())
-	}
-	return db
-}
+// 	if appengine.IsAppEngine() {
+// 		db, err = gorm.Open("mysql", cloudSQLConnection)
+// 	} else {
+// 		db, err = gorm.Open("mysql", localConnection)
+// 	}
+// 	if err != nil {
+// 		panic(err.Error())
+// 	}
+// 	return db
+// }
 
 // AddNewInDB DBに新しく追加する
-func AddNewInDB(id int, name string, password string, email string) { //, createdAt string
+func AddNewInDB(id int, name string, password string, email string) {
 	db := ConnectGorm()
-	db.Create(&entity.Users{ID: id, Name: name, PassWord: password, Email: email}) //, CreatedAt: createdAt
+	db.Create(&entity.Users{ID: id, Name: name, PassWord: password, Email: email})
 	defer db.Close()
 }
 
@@ -147,8 +140,6 @@ func GetUser(username string) entity.UsersMig {
 	db.Close()
 	return user
 }
-
-// func InsertChannelInfoPOST() {}
 
 // InsterRegChannel チャンネルURLをDBに登録
 func InsterRegChannel(url string) ([]entity.RegChannel, error) {
